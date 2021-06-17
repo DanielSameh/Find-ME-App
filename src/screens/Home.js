@@ -1,11 +1,11 @@
 import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 const Home = () => {
-  var h = 6
+
   return (
     <View>
-      <Text>Hello</Text>
+      <Text>Hello This is Home</Text>
     </View>
   )
 }
