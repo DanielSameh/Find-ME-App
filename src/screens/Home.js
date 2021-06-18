@@ -1,12 +1,12 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+
+import Container from '../components/layout/ContainerView'
+
 
 const Home = () => {
-
   return (
-    <View>
-      <Text>Hello This is Home</Text>
-    </View>
+    <Container>
+    </Container>
   )
 }
 
