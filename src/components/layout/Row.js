@@ -6,7 +6,6 @@ const Row = ({ children, direction }) => {
 }
 
 const Horizontal = styled.View`
-
 flex-wrap: wrap;
 flex-direction : row;
 align-self:${props => props.direction || 'center'};
@@ -15,3 +14,4 @@ align-items: center;
 `
 
 export default Row
+

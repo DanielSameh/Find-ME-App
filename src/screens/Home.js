@@ -1,10 +1,9 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
-import { Dimensions } from 'react-native';
 
-import Card from '../components/layout/Card'
-import Container from '../components/layout/ContainerView'
+import Card from '../components/core/Card'
 import VerticalSpace from '../components/layout/VerticalSpace'
+import routes from '../navigation/routes';
 
 
 const casesList = [
@@ -13,7 +12,7 @@ const casesList = [
     uri: "https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU",
     caseName: "Ahmed Mohamed",
     state: "Founded",
-    caseLocation: "Gize"
+    caseLocation: "Giza"
   },
   {
     id: "2",
@@ -38,24 +37,23 @@ const casesList = [
   },
 ]
 
-const Home = () => {
-  const width = Dimensions.get('window').width;
+const Home = ({ navigation }) => {
   return (
-    <Container>
+    <View style={{ backgroundColor: '#E5E5E5' }}>
       <>
         <FlatList
           data={casesList}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={{ width: width }}>
+            <View style={{ width: '100%' }}>
               <VerticalSpace height='5px' />
               <View style={{ backgroundColor: 'white', borderRadius: 13 }}>
                 <Card
                   uri={item.uri}
                   height={200}
                   onError={() => { }}
-                  onPress={() => { console.log('OnPress') }}
-                  borderTopRadius={13}
+                  onPress={() => { navigation.navigate(routes.DETAILS, item) }}
+                  borderTopRadius={16}
                   caseName={item.caseName}
                   state={item.state}
                   caseLocation={item.caseLocation}
@@ -67,8 +65,9 @@ const Home = () => {
         />
 
       </>
-    </Container>
+    </View>
   )
 }
 
 export default Home
+

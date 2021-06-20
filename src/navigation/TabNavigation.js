@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import AddScreen from '../screens/AddCaseScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
-import Icon from '../components/layout/Icon';
+import Icon from '../components/core/Icon';
 import HomeNavigator from "./HomeNavigation";
 
 
@@ -33,11 +33,14 @@ const TabNavigator = () => {
                 options={({ navigation }) => ({
                     tabBarButton: () => (
                         <Icon
-                            iconColor='white'
-                            iconName='plus'
-                            iconSize={40}
-                            onPress={() => { navigation.navigate("Add") }}
                             backgroundColor='rgba(72, 162, 245, 1)'
+                            bottom='40px'
+                            borderRadius='40px'
+                            size='80px'
+                            IconComponent={<MaterialCommunityIcons name='plus' size={40} color='white' />}
+                            onPress={() => {
+                                navigation.navigate("Add")
+                            }}
                         />
                     ),
                 })}

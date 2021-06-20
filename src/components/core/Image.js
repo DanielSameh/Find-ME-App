@@ -5,10 +5,10 @@ const CustomImage = ({
     uri,
     onError,
     onPress,
-    borderTopRightRadius = '0px',
-    borderTopLeftRadius = '0px',
-    borderBottomRightRadius = '0px',
-    borderBottomLeftRadius = '0px',
+    borderTopRightRadius = 0,
+    borderTopLeftRadius = 0,
+    borderBottomRightRadius = 0,
+    borderBottomLeftRadius = 0,
     height,
     width
 }) => {
