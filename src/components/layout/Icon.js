@@ -5,35 +5,35 @@ import styled from 'styled-components'
 
 
 const Icon = ({
-    backgroundColor,
-    onPress,
-    size,
-    borderRadius,
-    borderWidth,
-    bottom,
-    marign,
-    iconColor,
-    iconSize = 40,
-    iconName
+  backgroundColor,
+  onPress,
+  size,
+  borderRadius,
+  borderWidth,
+  bottom,
+  marign,
+  iconColor,
+  iconSize = 40,
+  iconName
 }) => {
-    return (
-        <IconView
-            activeOpacity={1}
-            onPress={onPress}
-            backgroundColor={backgroundColor}
-            borderRadius={borderRadius}
-            borderWidth={borderWidth}
-            bottom={bottom}
-            marign={marign}
-            size={size}
-        >
-            <MaterialCommunityIcons
-                name={iconName}
-                size={iconSize}
-                color={iconColor}
-            />
-        </IconView>
-    )
+  return (
+    <IconView
+      activeOpacity={1}
+      onPress={onPress}
+      backgroundColor={backgroundColor}
+      borderRadius={borderRadius}
+      borderWidth={borderWidth}
+      bottom={bottom}
+      marign={marign}
+      size={size}
+    >
+      <MaterialCommunityIcons
+        name={iconName}
+        size={iconSize}
+        color={iconColor}
+      />
+    </IconView>
+  )
 }
 
 export default Icon

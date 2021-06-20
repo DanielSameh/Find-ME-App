@@ -10,7 +10,7 @@ const VerticalSpace = ({ children, height, backColor }) => {
 }
 
 const Vertical = styled.View`
-height:${props => props.height || '16px'};
+height:${props => props.height || 16}px;
 width: 100%;
 background:${props => props.backColor || 'transparent'};
 `

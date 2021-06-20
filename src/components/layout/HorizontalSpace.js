@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const HorizontalSpace = ({ children, width }) => {
-  return <Horizontal width={width}>{children}</Horizontal>
+const HorizontalSpace = ({ width }) => {
+  return <Horizontal width={width}/>
 }
 
 const Horizontal = styled.View`

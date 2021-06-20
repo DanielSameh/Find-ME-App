@@ -3,13 +3,13 @@ import { View, Text } from 'react-native'
 import Container from '../components/layout/ContainerView'
 
 const CaseDetailsScreen = () => {
-    return (
-        <Container>
-            <View>
+  return (
+    <Container>
+      <View>
 
-            </View>
-        </Container>
-    )
+      </View>
+    </Container>
+  )
 }
 
 export default CaseDetailsScreen
