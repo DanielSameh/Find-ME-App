@@ -94,7 +94,6 @@ const AddCaseScreen = ({ navigation }) => {
                 <VerticalSpace height={'40px'} />
             </ScrollView>
         </View>
-
     )
 }
 

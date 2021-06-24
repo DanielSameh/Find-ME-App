@@ -9,6 +9,7 @@ const Icon = ({
     size,
     borderRadius,
     borderWidth,
+    borderColor,
     bottom,
     marign,
     IconComponent
@@ -22,6 +23,7 @@ const Icon = ({
             borderWidth={borderWidth}
             bottom={bottom}
             marign={marign}
+            borderColor={borderColor}
             size={size}
         >
             {IconComponent}
@@ -39,7 +41,7 @@ const IconView = styled(TouchableOpacity)`
     height: ${props => props.size || '80px'};
     width: ${props => props.size || '80px'};
     border-radius: ${props => props.borderRadius || '0px'};
-    border-color: ${props => props.backgroundColor};
+    border-color: ${props => props.borderColor || props.backgroundColor};
     border-width: ${props => props.borderWidth || '0px'};
     bottom: ${props => props.bottom || '0px'};
     margin: ${props => props.marign || '0px'};

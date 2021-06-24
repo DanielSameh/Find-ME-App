@@ -13,7 +13,16 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+            tabBarOptions={{
+                style: {
+                    shadowOffset: {
+                        height: 0, height: 0
+                    }
+                }
+            }}
+        >
+
             <Tab.Screen
                 name={"HomeNavigator"}
                 component={HomeNavigator}
@@ -31,6 +40,7 @@ const TabNavigator = () => {
                 name={"Add"}
                 component={AddScreen}
                 options={({ navigation }) => ({
+                    tabBarVisible: false,
                     tabBarButton: () => (
                         <Icon
                             backgroundColor='rgba(72, 162, 245, 1)'
