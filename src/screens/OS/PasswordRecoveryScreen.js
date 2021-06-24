@@ -14,9 +14,9 @@ const PasswordRecoveryScreen = () => {
   return (
     <Container>
       <View style={{ marginBottom: 18 }}>
-        <Typography text={'Password Recovery'} marginTop={30} marginBottom={10} fontSize={26} fontWeight={'bold'} />
+        <Typography margin={20} fontSize={'26px'} fontWeight={'bold'} textAlign={'center'}>Password Recovery</Typography>
 
-        <Typography fontColor={'#9FA5C0'}  text={'Enter your email to recover your password'}/>
+        <Typography fontColor={'#9FA5C0'} textAlign={'center'} >Enter your email to recover your password</Typography>
       </View>
       <Input inputPlaceHolder={'Email or Phone number'} Password={false}>
         <MaterialCommunityIcons

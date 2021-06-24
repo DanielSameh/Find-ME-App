@@ -10,17 +10,18 @@ import colors from '../../components/styles/colors'
 const OnboardingScreen = ({navigation}) => {
   return (
     <Container>
-      <VerticalSpace height={'55'}/>
+      <VerticalSpace height={55}/>
       <Image source={require('../../../assets/Boy.png')}/>
       <VerticalSpace/>
-      <Typography text={'Find ME'} fontSize={22} fontWeight={'700'}/>
-      <Typography text={'We help you finding your lost kids'} fontSize={15} fontColor={colors.grayOutline}/>
+      <Typography fontSize={'22px'} fontWeight={'700'} >Find ME</Typography>
+      <Typography  fontSize={'15px'} fontColor={colors.grayOutline}>We help you finding your lost kids</Typography>
       <VerticalSpace/>
-      <Row justifyContent={'space-around'}>
-        <HorizontalSpace width={'1px'}/>
-        <Button width={'180px'} onPress={() => navigation.navigate('SignIn')}>Lost Kid</Button>
-        <Button width={'180px'}>Found Kid</Button>
-        <HorizontalSpace width={'1px'}/>
+      <Row justifyContent={'space-between'}>
+       
+        <Button width={'100%'} onPress={() => navigation.navigate('SignIn')}>Lost Kid</Button>
+        <HorizontalSpace width={'30px'}/>
+        <Button width={'100%'}>Found Kid</Button>
+     
       </Row>
     </Container>  )
 }

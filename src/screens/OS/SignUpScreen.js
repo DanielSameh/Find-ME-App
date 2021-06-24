@@ -23,14 +23,14 @@ const SignUpScreen  = ({ navigation })  =>  {
     <ScrollView>
       <Container>
         <View style={{ marginBottom: 18 }}>
-          <Typography marginTop={30} alignSelf={'center'} fontSize={22} fontWeight={'bold'}  text={'Register Account'} />
+          <Typography marginTop={30} alignSelf={'center'} fontSize={'22px'} fontWeight={'bold'}  >Register Account</Typography>
 
-          <Typography fontColor={'#9FA5C0'} text={' For the prupose of industry regulation, your details are required.'}/>
+          <Typography fontColor={'#9FA5C0'} isParagrapgh margin={15} textAlign={'center'} >For the prupose of industry regulation, your details are required.</Typography>
           
         </View>
         <View style={{width:'80%', height:1, backgroundColor:'#F5F5F5', borderRadius:30}}></View>
         <VerticalSpace/>
-        <Typography text={'Name'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+        <Typography  alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Name</Typography>
         <Controller
           control={control}
           rules={{
@@ -38,7 +38,7 @@ const SignUpScreen  = ({ navigation })  =>  {
           }}
           render={({ field: { onChange, value } }) => (
             <Row>
-              <Input inputPlaceHolder={'Full Name'} Password={false} onChangeText={value => onChange(value)} value={value}>
+              <Input inputPlaceHolder={'Full Name'} Password={false} onTermChange={value => onChange(value)} term={value}>
                 <MaterialCommunityIcons
                   style={styles.iconStyle}
                   name='account'
@@ -55,7 +55,7 @@ const SignUpScreen  = ({ navigation })  =>  {
         />
         {errors.name && <Text style={styles.warningText} >Name is required.</Text>}
         <VerticalSpace/>
-        <Typography text={'Email Address'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+        <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Email Address</Typography>
         <Controller
           control={control}
           rules={{
@@ -63,7 +63,7 @@ const SignUpScreen  = ({ navigation })  =>  {
           }}
           render={({ field: { onChange, value } }) => (
             <Row>
-              <Input inputPlaceHolder={'Email'} Password={false} onChangeText={value => onChange(value)} value={value}>
+              <Input inputPlaceHolder={'Email'} Password={false} onTermChange={value => onChange(value)} term={value}>
                 <MaterialCommunityIcons
                   style={styles.iconStyle}
                   name='email-outline'
@@ -81,7 +81,7 @@ const SignUpScreen  = ({ navigation })  =>  {
         {errors.email && <Text style={styles.warningText}>Email is required.</Text>}
 
         <VerticalSpace/>
-        <Typography text={'Phone Number'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+        <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Phone Number</Typography>
         <Controller
           control={control}
           rules={{
@@ -89,7 +89,7 @@ const SignUpScreen  = ({ navigation })  =>  {
           }}
           render={({ field: { onChange, value } }) => (
             <Row>
-              <Input inputPlaceHolder={'Phone No.'} Password={false} onChangeText={value => onChange(value)} value={value}>
+              <Input inputPlaceHolder={'Phone No.'} Password={false} onTermChange={value => onChange(value)} term={value}>
                 <MaterialCommunityIcons
                   style={styles.iconStyle}
                   name='cellphone'
@@ -106,7 +106,7 @@ const SignUpScreen  = ({ navigation })  =>  {
         />
         {errors.Phone && <Text style={styles.warningText} >Phone is required.</Text>}
         <VerticalSpace/>
-        <Typography text={'Password'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+        <Typography  alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Password</Typography>
         <Controller
           control={control}
           rules={{
@@ -116,7 +116,7 @@ const SignUpScreen  = ({ navigation })  =>  {
           }}
           render={({ field: { onChange, value } }) => (
             <Row>
-              <Input inputPlaceHolder={'Password'} Password={true} onChangeText={value => onChange(value)} value={value}  >
+              <Input inputPlaceHolder={'Password'} Password={true} onTermChange={value => onChange(value)} term={value}  >
                 <SimpleLineIcons style={styles.iconStyle} name='lock' size={24} color='#3E5481' />
               </Input>
             </Row>
@@ -127,7 +127,7 @@ const SignUpScreen  = ({ navigation })  =>  {
         />
         {errors.Password && <Text style={styles.warningText}>Password is required.</Text>}
         <VerticalSpace/>
-        <Typography text={'Confirm Password'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+        <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Confirm Password</Typography>
         <Controller
           control={control}
           rules={{
@@ -137,7 +137,7 @@ const SignUpScreen  = ({ navigation })  =>  {
           }}
           render={({ field: { onChange, value } }) => (
             <Row>
-              <Input inputPlaceHolder={'Confirm Password'} Password={true} onChangeText={value => onChange(value)} value={value}  >
+              <Input inputPlaceHolder={'Confirm Password'} Password={true} onTermChange={value => onChange(value)} term={value}  >
                 <SimpleLineIcons style={styles.iconStyle} name='lock' size={24} color='#3E5481' />
               </Input>
             </Row>
@@ -150,7 +150,7 @@ const SignUpScreen  = ({ navigation })  =>  {
         <VerticalSpace/>
         <View style={{width:'80%', height:1, backgroundColor:'#F5F5F5', borderRadius:30}}></View>
         <Button title="Submit" onPress={handleSubmit(onSubmit)}>Sign Up</Button>
-        <Typography text={'By signing up, you are agreeing to our Terms & Conditions and Privacy Policy.'} fontSize={12} />
+        <Typography isParagrapgh margin={15} textAlign={'center'} fontSize={'12px'}>By signing up, you are agreeing to our Terms & Conditions and Privacy Policy.</Typography>
         <VerticalSpace height={50}/>
 
       </Container>

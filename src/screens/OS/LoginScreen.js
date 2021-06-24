@@ -18,13 +18,12 @@ const LoginScreen = ({ navigation }) => {
   return (
     <Container>
       <View style={{ marginBottom: 18 }}>
-
-        <Typography marginTop={40} alignSelf={'center'} fontSize={22} fontWeight={'bold'}  text={'Welcome Back!'} />
-        <Typography marginTop ={15}text={'Please enter your account here'} />
+        <Typography marginTop={40} alignSelf={'center'} fontSize={'22px'} fontWeight={'bold'}  >Welcome Back!</Typography>
+        <Typography marginTop ={15} >Please enter your account here</Typography>
       </View>
       <VerticalSpace />
 
-      <Typography text={'Username'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+      <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Username</Typography>
       <Controller
         control={control}
         rules={{
@@ -32,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
         }}
         render={({ field: { onChange, value } }) => (
           <Row>
-            <Input inputPlaceHolder={'Email or Phone number'} Password={false} onChangeText={value => onChange(value)} value={value}>
+            <Input inputPlaceHolder={'Email or Phone number'} Password={false} onTermChange={value => onChange(value)} term={value}>
               <MaterialCommunityIcons
                 style={styles.iconStyle}
                 name='email-outline'
@@ -49,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
       />
       {errors.Email && <Text style={styles.warningText} >Name is required.</Text>}
       <VerticalSpace/>
-      <Typography text={'Password'} alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}/>
+      <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Password</Typography>
       <Controller
         control={control}
         rules={{
@@ -57,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
         }}
         render={({ field: { onChange, value } }) => (
           <Row>
-            <Input inputPlaceHolder={'Password'} Password={true} onChangeText={value => onChange(value)} value={value} >
+            <Input inputPlaceHolder={'Password'} Password={true} onTermChange={value => onChange(value)} term={value} >
               <SimpleLineIcons style={styles.iconStyle} name='lock' size={24} color='#3E5481' />
             </Input>
           </Row>
@@ -67,14 +66,14 @@ const LoginScreen = ({ navigation }) => {
       />
       {errors.Password && <Text style={styles.warningText} >Password is required.</Text>}
       <TouchableOpacity style={{alignSelf:'flex-end', marginRight:15}} onPress={() => navigation.navigate('ForgetPassword')}>
-        <Typography fontColor={'#2E3E5C'} text={'Forgot Password?'}/>
+        <Typography fontColor={'#2E3E5C'} >Forgot Password?</Typography>
       </TouchableOpacity>
       <Button title="Submit" onPress={handleSubmit(onSubmit)}>Login</Button>
 
       <Row>
-        <Typography fontColor={'#3E5481'} text={"Don't have any account?"}/>
+        <Typography marginTop={25} fontColor={'#3E5481'}>Don't have any account?</Typography>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>  
-          <Typography fontColor={'#1FCC79'} fontWeight={'bold'} justifyContent={'center'} text={'Sign Up'}/>  
+          <Typography  fontColor={'#1FCC79'} fontWeight={'bold'} justifyContent={'center'} >     Sign Up</Typography>
         </TouchableOpacity>
       </Row>
     </Container>

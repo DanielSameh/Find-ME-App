@@ -14,11 +14,7 @@ const ContainerView = styled(SafeAreaView)`
     align-items:center;
     width: 100%;
     height: 100%;
-<<<<<<< HEAD
     background: ${colors.white}; 
-=======
-    background: ${props => props.bc || colors.backColor}; 
->>>>>>> ahmed
     
 
 `

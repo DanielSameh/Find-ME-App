@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 
 const Icon = ({
-<<<<<<< HEAD:src/components/layout/Icon.js
   backgroundColor,
   onPress,
   size,
@@ -12,13 +11,11 @@ const Icon = ({
   borderWidth,
   bottom,
   marign,
-  iconColor,
-  iconSize = 40,
-  iconName
+  IconComponent
 }) => {
   return (
     <IconView
-      activeOpacity={1}
+      activeOpacity={0.5}
       onPress={onPress}
       backgroundColor={backgroundColor}
       borderRadius={borderRadius}
@@ -27,38 +24,9 @@ const Icon = ({
       marign={marign}
       size={size}
     >
-      <MaterialCommunityIcons
-        name={iconName}
-        size={iconSize}
-        color={iconColor}
-      />
+      {IconComponent}
     </IconView>
   )
-=======
-    backgroundColor,
-    onPress,
-    size,
-    borderRadius,
-    borderWidth,
-    bottom,
-    marign,
-    IconComponent
-}) => {
-    return (
-        <IconView
-            activeOpacity={0.5}
-            onPress={onPress}
-            backgroundColor={backgroundColor}
-            borderRadius={borderRadius}
-            borderWidth={borderWidth}
-            bottom={bottom}
-            marign={marign}
-            size={size}
-        >
-            {IconComponent}
-        </IconView>
-    )
->>>>>>> ahmed:src/components/core/Icon.js
 }
 
 export default Icon
