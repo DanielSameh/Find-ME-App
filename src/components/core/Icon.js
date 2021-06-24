@@ -4,31 +4,29 @@ import styled from 'styled-components'
 
 
 const Icon = ({
-    backgroundColor,
-    onPress,
-    size,
-    borderRadius,
-    borderWidth,
-    borderColor,
-    bottom,
-    marign,
-    IconComponent
+  backgroundColor,
+  onPress,
+  size,
+  borderRadius,
+  borderWidth,
+  bottom,
+  marign,
+  IconComponent
 }) => {
-    return (
-        <IconView
-            activeOpacity={0.5}
-            onPress={onPress}
-            backgroundColor={backgroundColor}
-            borderRadius={borderRadius}
-            borderWidth={borderWidth}
-            bottom={bottom}
-            marign={marign}
-            borderColor={borderColor}
-            size={size}
-        >
-            {IconComponent}
-        </IconView>
-    )
+  return (
+    <IconView
+      activeOpacity={0.5}
+      onPress={onPress}
+      backgroundColor={backgroundColor}
+      borderRadius={borderRadius}
+      borderWidth={borderWidth}
+      bottom={bottom}
+      marign={marign}
+      size={size}
+    >
+      {IconComponent}
+    </IconView>
+  )
 }
 
 export default Icon

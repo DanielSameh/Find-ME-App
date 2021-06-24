@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Title = ({ fontSize, fontWeight, fontColor, children }) => {
-    return (
-        <HeaderOne FC={fontColor} FW={fontWeight} FS={fontSize}>
-            {children}
-        </HeaderOne>
-    )
+  return (
+    <HeaderOne FC={fontColor} FW={fontWeight} FS={fontSize}>
+      {children}
+    </HeaderOne>
+  )
 }
 
 const HeaderOne = styled.Text`

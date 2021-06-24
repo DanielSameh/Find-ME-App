@@ -2,35 +2,35 @@ import React from 'react'
 import { TextInput } from 'react-native'
 import styled from 'styled-components'
 
-const input = ({
-    inputPlaceHolder,
-    isDescription,
-    Password,
-    children,
-    Width,
-    Height,
-    isSearch,
-    term,
-    onTermChange,
-    onTermSubmit,
-    keyboardType = 'default',
+const Input = ({
+  inputPlaceHolder,
+  isDescription,
+  Password,
+  children,
+  Width,
+  Height,
+  isSearch,
+  term,
+  onTermChange,
+  onTermSubmit,
+  keyboardType = 'default',
 }) => {
-    return (
-        <InputView WD={Width} HG={Height} isSearch={isSearch} isDescription={isDescription}>
-            {children}
-            <InputField
-                HG={Height}
-                multiline={isDescription}
-                isDescription={isDescription}
-                value={term}
-                onChangeText={onTermChange}
-                onEndEditing={onTermSubmit}
-                placeholder={inputPlaceHolder}
-                secureTextEntry={Password}
-                keyboardType={keyboardType}
-            />
-        </InputView>
-    )
+  return (
+    <InputView WD={Width} HG={Height} isSearch={isSearch} isDescription={isDescription}>
+      {children}
+      <InputField
+        HG={Height}
+        multiline={isDescription}
+        isDescription={isDescription}
+        value={term}
+        onChangeText={onTermChange}
+        onEndEditing={onTermSubmit}
+        placeholder={inputPlaceHolder}
+        secureTextEntry={Password}
+        keyboardType={keyboardType}
+      />
+    </InputView>
+  )
 }
 
 const InputView = styled.View`
@@ -54,4 +54,4 @@ margin-bottom: ${props => (props.isDescription ? '0px' : '16px')};
 color: #2E3E5C;
 
 `
-export default input
+export default Input

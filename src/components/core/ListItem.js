@@ -2,22 +2,22 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import Typography from './Typography'
-import HorizontalSpace from '../layout/HorizontalSpace';
+import HorizontalSpace from '../layout/HorizontalSpace'
 
 const ListItem = ({ onPress, title, LeftIconComponent, RightIconComponent }) => {
-    return (
+  return (
 
-        <Container activeOpacity={0.5} onPress={onPress}>
-            <Container activeOpacity={0.5} justify='flex-start'>
-                {LeftIconComponent}
-                <HorizontalSpace width={10} />
-                <Typography fontColor='black' fontWeight='400' fontsize='15px'>
-                    {title}
-                </Typography>
-            </Container>
-            {RightIconComponent}
-        </Container>
-    )
+    <Container activeOpacity={0.5} onPress={onPress}>
+      <Container activeOpacity={0.5} justify='flex-start'>
+        {LeftIconComponent}
+        <HorizontalSpace width={'10px'} />
+        <Typography fontColor='black' fontWeight='400' fontsize='15px'>
+          {title}
+        </Typography>
+      </Container>
+      {RightIconComponent}
+    </Container>
+  )
 }
 const Container = styled(TouchableOpacity)`
 

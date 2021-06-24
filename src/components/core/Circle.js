@@ -3,16 +3,16 @@ import { View } from 'react-native'
 import styled from 'styled-components'
 
 const Circle = ({ height, width, borderRadius, bc, borderWidth, borderColor }) => {
-    return (
-        <OuterView height={height}
-            width={width}
-            borderRadius={borderRadius}
-            bc={bc}
-            borderWidth={borderWidth}
-            borderColor={borderColor}
-        >
-        </OuterView>
-    )
+  return (
+    <OuterView height={height}
+      width={width}
+      borderRadius={borderRadius}
+      bc={bc}
+      borderWidth={borderWidth}
+      borderColor={borderColor}
+    >
+    </OuterView>
+  )
 }
 
 export default Circle
