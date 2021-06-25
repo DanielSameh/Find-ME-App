@@ -14,19 +14,13 @@ import VerticalSpace from '../components/layout/VerticalSpace'
 import HorizontalSpace from '../components/layout/HorizontalSpace'
 import Button from '../components/core/Button'
 import routes from '../navigation/routes'
-import AppButtomSheet from '../components/core/ButtomSheet'
+import ImageInputList from '../components/core/ImageInputList'
 
 const AddCaseScreen = ({ navigation }) => {
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false)
+  const [imageUris, setImageUris] = useState([]);
   const [date, setDate] = useState('"01-01-2021"')
   return (
     <View>
-      <AppButtomSheet
-        isVisible={bottomSheetVisible}
-        onClosed={() => setBottomSheetVisible(false)}
-        galleryOnPress={() => selectImageFromGallery()}
-        cameraOnPress={() => selectImageFromCamera()}
-      />
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
@@ -43,14 +37,20 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Upload Photo</Title>
           </Row>
-          <AddCaseView onPress={() => { setBottomSheetVisible(true) }}>
-            <Ionicons style={Styles.iconStyle} name='images' size={50} color='#D0DBEA' />
-            <Title fontWeight={700}>Add Kid Photo</Title>
-            <Title fontColor={'#9FA5C0'} fontSize={'12px'}>
-              Up to (12 mb)
-            </Title>
-          </AddCaseView>
 
+          <ImageInputList
+            imageUris={imageUris}
+            onAddImage={(uri) => {
+              setImageUris(
+                [...imageUris, uri]
+              )
+            }}
+            onRemoveImage={(uri) => {
+              setImageUris(
+                imageUris.filter((imageUri) => imageUri !== uri)
+              )
+            }}
+          />
           <VerticalSpace />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
@@ -98,12 +98,7 @@ const AddCaseScreen = ({ navigation }) => {
   )
 }
 
-const Styles = StyleSheet.create({
 
-  iconStyle: {
-    alignSelf: 'center',
-  },
-})
 
 const AddCaseView = styled.TouchableOpacity`
             width: 327px;

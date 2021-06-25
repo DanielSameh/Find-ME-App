@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import TabNavigator from './TabNavigation'
 import LoginScreen from '../screens/OS/LoginScreen'
 import SignUpScreen from '../screens/OS/SignUpScreen'
