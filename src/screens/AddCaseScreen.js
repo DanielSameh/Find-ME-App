@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Ionicons, EvilIcons } from '@expo/vector-icons'
-import styled from 'styled-components'
+import { View } from 'react-native'
+import { EvilIcons } from '@expo/vector-icons'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 
 
@@ -97,15 +96,4 @@ const AddCaseScreen = ({ navigation }) => {
 
   )
 }
-
-
-
-const AddCaseView = styled.TouchableOpacity`
-            width: 327px;
-            height: 161px;
-            border: 2px dashed #d0dbea;
-            border-radius: 16px;
-            justify-content: center;
-            `
-
 export default AddCaseScreen

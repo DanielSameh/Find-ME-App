@@ -10,6 +10,8 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 
+import styled from "styled-components";
+
 import Title from "./Title";
 import useImage from "../../hooks/useImage";
 import ImagePoPUp from "./ImagePopUp";
@@ -118,5 +120,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
 });
+
+
 
 export default ImageInput;
