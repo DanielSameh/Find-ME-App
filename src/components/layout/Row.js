@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Row = ({ children, direction }) => {
-  return <Horizontal direction={direction}>{children}</Horizontal>
+const Row = ({ children, direction, ...props }) => {
+  return <Horizontal style={{...props}} direction={direction}>{children}</Horizontal>
 }
 
 const Horizontal = styled.View`
-flexWrap: wrap
-flex-direction : row
-align-self:${props => props.direction || 'center'}
-justify-content: space-around
+flex-wrap: wrap;
+flex-direction : row;
+align-self:${props => props.direction || 'center'};
+align-items: center;
 `
 
 export default Row
