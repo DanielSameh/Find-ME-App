@@ -1,24 +1,46 @@
 import React from 'react'
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { SimpleLineIcons } from '@expo/vector-icons'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+
 import Button from '../../components/core/Button'
 import Input from '../../components/core/Input'
 import Container from '../../components/layout/ContainerView'
 import Row from '../../components/layout/Row'
-import { useForm, Controller } from 'react-hook-form'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { SimpleLineIcons } from '@expo/vector-icons'
 import colors from '../../components/styles/colors'
 import Typography from '../../components/core/Typography'
 import VerticalSpace from '../../components/layout/VerticalSpace'
+import useApi from '../../hooks/useApi'
+import userApi from '../../api/user'
 
-// import { AntDesign } from '@expo/vector-icons'
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
+const SignUpSchema = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().required().email(),
+  phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
+  password: yup.string().required('').min(6, 'password must be at least 6 char'),
+  equalPassword: yup.string().oneOf([yup.ref('password'), null], 'password must match')
+})
 
+const SignUpScreen = ({ navigation }) => {
 
-const SignUpScreen  = ({ navigation })  =>  {
-  const { control, handleSubmit, formState: { errors } } = useForm()
-  const onSubmit = data =>{ console.log(data),navigation.navigate('Navigator')}
-  
+  const registerApi = useApi(userApi.signUp)
+
+  const { register, control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(SignUpSchema) })
+  const onSubmit = async data => {
+
+    const d = Object.fromEntries(
+      Object.entries(data).filter(([key, value]) => key !== 'equalPassword')
+    )
+    console.log(d)
+    const result = await registerApi.request(d);
+    //navigation.navigate('Navigator')
+  }
+
   return (
     <ScrollView>
       <Container>
@@ -26,16 +48,14 @@ const SignUpScreen  = ({ navigation })  =>  {
           <Typography marginTop={30} alignSelf={'center'} fontSize={'22px'} fontWeight={'bold'}  >Register Account</Typography>
 
           <Typography fontColor={'#9FA5C0'} isParagrapgh margin={15} textAlign={'center'} >For the prupose of industry regulation, your details are required.</Typography>
-          
+
         </View>
-        <View style={{width:'80%', height:1, backgroundColor:'#F5F5F5', borderRadius:30}}></View>
-        <VerticalSpace/>
-        <Typography  alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Name</Typography>
+        <View style={{ width: '80%', height: 1, backgroundColor: '#F5F5F5', borderRadius: 30 }}></View>
+        <VerticalSpace />
+        <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Name</Typography>
         <Controller
+          ref={register('name')}
           control={control}
-          rules={{
-            required: true,
-          }}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Full Name'} Password={false} onTermChange={value => onChange(value)} term={value}>
@@ -50,17 +70,17 @@ const SignUpScreen  = ({ navigation })  =>  {
           )}
           name="name"
           // eslint-disable-next-line react/jsx-no-duplicate-props
-          rules={{ required: true }}
+          // rules={{ required: true }}
           defaultValue=""
+
         />
-        {errors.name && <Text style={styles.warningText} >Name is required.</Text>}
-        <VerticalSpace/>
+        {errors.name && <Text style={styles.warningText} >{errors.name.message}</Text>}
+
+        <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Email Address</Typography>
         <Controller
           control={control}
-          rules={{
-            required: true,
-          }}
+          ref={register('email')}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Email'} Password={false} onTermChange={value => onChange(value)} term={value}>
@@ -74,19 +94,15 @@ const SignUpScreen  = ({ navigation })  =>  {
             </Row>
           )}
           name="email"
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          rules={{ required: true }}
           defaultValue=""
         />
-        {errors.email && <Text style={styles.warningText}>Email is required.</Text>}
+        {errors.email && <Text style={styles.warningText}>{errors.email.message}</Text>}
 
-        <VerticalSpace/>
+        <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Phone Number</Typography>
         <Controller
+          ref={register('phone')}
           control={control}
-          rules={{
-            required: true,
-          }}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Phone No.'} Password={false} onTermChange={value => onChange(value)} term={value}>
@@ -99,21 +115,15 @@ const SignUpScreen  = ({ navigation })  =>  {
               </Input>
             </Row>
           )}
-          name="Phone"
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          rules={{ required: true }}
+          name="phone"
           defaultValue=""
         />
-        {errors.Phone && <Text style={styles.warningText} >Phone is required.</Text>}
-        <VerticalSpace/>
-        <Typography  alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Password</Typography>
+        {errors.phone && <Text style={styles.warningText} >{errors.phone.message}</Text>}
+        <VerticalSpace />
+        <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Password</Typography>
         <Controller
+          ref={register('password')}
           control={control}
-          rules={{
-            required: true,
-            minLength:6,
-          
-          }}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Password'} Password={true} onTermChange={value => onChange(value)} term={value}  >
@@ -121,20 +131,15 @@ const SignUpScreen  = ({ navigation })  =>  {
               </Input>
             </Row>
           )}
-          name="Password"
+          name="password"
           defaultValue=""
-
         />
-        {errors.Password && <Text style={styles.warningText}>Password is required.</Text>}
-        <VerticalSpace/>
+        {errors.password && <Text style={styles.warningText}>Password is required.</Text>}
+        <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Confirm Password</Typography>
         <Controller
+          ref={register('equalPassword')}
           control={control}
-          rules={{
-            required: true,
-            minLength:6,
-          
-          }}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Confirm Password'} Password={true} onTermChange={value => onChange(value)} term={value}  >
@@ -144,14 +149,13 @@ const SignUpScreen  = ({ navigation })  =>  {
           )}
           name="equalPassword"
           defaultValue=""
-
         />
-        {errors.equalPassword && <Text style={styles.warningText}>Password confirmation is required.</Text>}
-        <VerticalSpace/>
-        <View style={{width:'80%', height:1, backgroundColor:'#F5F5F5', borderRadius:30}}></View>
+        {errors.equalPassword && <Text style={styles.warningText}>{errors.equalPassword.message}</Text>}
+        <VerticalSpace />
+        <View style={{ width: '80%', height: 1, backgroundColor: '#F5F5F5', borderRadius: 30 }}></View>
         <Button title="Submit" onPress={handleSubmit(onSubmit)}>Sign Up</Button>
         <Typography isParagrapgh margin={15} textAlign={'center'} fontSize={'12px'}>By signing up, you are agreeing to our Terms & Conditions and Privacy Policy.</Typography>
-        <VerticalSpace height={50}/>
+        <VerticalSpace height={50} />
 
       </Container>
     </ScrollView>
@@ -169,9 +173,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginHorizontal: 15,
   },
-  warningText:{
-    alignSelf:'flex-end',
-    marginRight:30,
+  warningText: {
+    alignSelf: 'flex-end',
+    marginRight: 30,
     color: colors.watermelonColor
   }
 })
