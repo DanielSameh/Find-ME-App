@@ -15,30 +15,34 @@ import Typography from '../../components/core/Typography'
 import VerticalSpace from '../../components/layout/VerticalSpace'
 import useApi from '../../hooks/useApi'
 import userApi from '../../api/user'
-
+import useAuth from '../../auth/useAuth'
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const SignUpSchema = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().required().email(),
   phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
-  password: yup.string().required('').min(6, 'password must be at least 6 char'),
+  password: yup.string().required().min(6, 'password must be at least 6 char'),
   equalPassword: yup.string().oneOf([yup.ref('password'), null], 'password must match')
 })
 
 const SignUpScreen = ({ navigation }) => {
 
   const registerApi = useApi(userApi.signUp)
+  const { login } = useAuth()
 
   const { register, control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(SignUpSchema) })
-  const onSubmit = async data => {
+  const onSubmit = async userInfo => {
 
     const d = Object.fromEntries(
-      Object.entries(data).filter(([key, value]) => key !== 'equalPassword')
+      Object.entries(userInfo).filter(([key, value]) => key !== 'equalPassword')
     )
-    console.log(d)
-    const result = await registerApi.request(d);
-    //navigation.navigate('Navigator')
+
+    const { data } = await registerApi.request(d);
+
+    login(data.token)
+    console.log(data.token)
+    navigation.navigate('Navigator')
   }
 
   return (
@@ -54,7 +58,7 @@ const SignUpScreen = ({ navigation }) => {
         <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Name</Typography>
         <Controller
-          ref={register('name')}
+          shouldUnregister={register('name')}
           control={control}
           render={({ field: { onChange, value } }) => (
             <Row>
@@ -69,10 +73,7 @@ const SignUpScreen = ({ navigation }) => {
             </Row>
           )}
           name="name"
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          // rules={{ required: true }}
           defaultValue=""
-
         />
         {errors.name && <Text style={styles.warningText} >{errors.name.message}</Text>}
 
@@ -80,7 +81,7 @@ const SignUpScreen = ({ navigation }) => {
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Email Address</Typography>
         <Controller
           control={control}
-          ref={register('email')}
+          shouldUnregister={register('email')}
           render={({ field: { onChange, value } }) => (
             <Row>
               <Input inputPlaceHolder={'Email'} Password={false} onTermChange={value => onChange(value)} term={value}>
@@ -101,7 +102,7 @@ const SignUpScreen = ({ navigation }) => {
         <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Phone Number</Typography>
         <Controller
-          ref={register('phone')}
+          shouldUnregister={register('phone')}
           control={control}
           render={({ field: { onChange, value } }) => (
             <Row>
@@ -122,7 +123,7 @@ const SignUpScreen = ({ navigation }) => {
         <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Password</Typography>
         <Controller
-          ref={register('password')}
+          shouldUnregister={register('password')}
           control={control}
           render={({ field: { onChange, value } }) => (
             <Row>
@@ -138,7 +139,7 @@ const SignUpScreen = ({ navigation }) => {
         <VerticalSpace />
         <Typography alignSelf={'flex-start'} marginLeft={40} fontColor={colors.grayOutline}>Confirm Password</Typography>
         <Controller
-          ref={register('equalPassword')}
+          shouldUnregister={register('equalPassword')}
           control={control}
           render={({ field: { onChange, value } }) => (
             <Row>

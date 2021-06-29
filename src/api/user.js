@@ -8,4 +8,4 @@ const signIn = (data) => {
     return axiosClient.post('/auth/login', JSON.stringify(data))
 }
 
-export default { signUp }
+export default { signUp, signIn }
