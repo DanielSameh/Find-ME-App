@@ -5,8 +5,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Home from '../screens/Home'
 import CaseDetailsScreen from '../screens/CaseDetailsScreen'
 import Icon from '../components/core/Icon'
-import routes from './routes'
-
 
 const Stack = createStackNavigator()
 
@@ -36,7 +34,7 @@ const HomeNavigator = ({ navigation }) => {
               borderRadius='15px'
               size='50px'
               marign='10px'
-              onPress={() => { navigation.navigate(routes.ADD) }}
+              onPress={() => { navigation.navigate('AddCase') }}
               IconComponent={<MaterialCommunityIcons name='plus' size={32} color='#2DDA93' />}
             />
           )

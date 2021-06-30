@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import TabNavigator from './TabNavigation'
 import LoginScreen from '../screens/OS/LoginScreen'
 import SignUpScreen from '../screens/OS/SignUpScreen'
-// import testScreen from '../screens/OS/testScreen'
+import testScreen from '../screens/OS/testScreen'
 import PasswordRecoveryScreen from '../screens/OS/PasswordRecoveryScreen'
 import OnboardingScreen from '../screens/OS/OnboardingScreen'
 import AddCaseScreen from '../screens/AddCaseScreen'
@@ -25,8 +25,9 @@ export default function MainNavigation() {
         }}
       >
 
-        {/* <Stack.Screen name='Test' component={testScreen} /> */}
         <Stack.Screen name='Onboarding' component={OnboardingScreen} />
+        <Stack.Screen name='Test' component={testScreen} />
+
         <Stack.Screen name='SignIn' component={LoginScreen} />
         <Stack.Screen name='SignUp' component={SignUpScreen} />
         <Stack.Screen name='AddCase' component={AddCaseScreen} />

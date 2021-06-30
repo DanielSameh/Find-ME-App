@@ -1,3 +1,4 @@
+import { props } from 'ramda'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import styled from 'styled-components'
@@ -13,9 +14,10 @@ const Button = ({
   isTransparent,
   height,
   style,
+  ...props
 }) => {
   return (
-    <View style={styles.Division}>
+    <View style={{...props}}>
       <RoundedTouchableOpacity
         style={style}
         width={width}

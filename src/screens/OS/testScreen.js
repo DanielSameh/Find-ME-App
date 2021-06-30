@@ -1,95 +1,112 @@
-import React from 'react'
-import {
-  View,
-  StyleSheet,
-  Button,
-  Modal,
-  Text,
-  TouchableOpacity,
-  Animated,
-} from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
-const ModalPoup = ({visible, children}) => {
-  const [showModal, setShowModal] = React.useState(visible)
-  const scaleValue = React.useRef(new Animated.Value(0)).current
-  React.useEffect(() => {
-    toggleModal()
-  }, [visible])
-  const toggleModal = () => {
-    if (visible) {
-      setShowModal(true)
-      Animated.spring(scaleValue, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start()
-    } else {
-      setTimeout(() => setShowModal(false), 200)
-      Animated.timing(scaleValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start()
-    }
+
+import React, { useState, useEffect } from 'react'
+import MapView,{Marker} from 'react-native-maps'
+import {  Text,View, StyleSheet,Dimensions,ActivityIndicator } from 'react-native'
+import * as Location from 'expo-location'
+import colors from '../../components/styles/colors'
+import Button from '../../components/core/Button'
+
+export default function testScreen({ navigation }) {
+
+  const [location, setLocation] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
+
+  useEffect(() => {
+    (async () => {
+  
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied')
+        return
+      }
+      let location = await (Location.getCurrentPositionAsync({}))
+      setLocation((location.coords))
+      
+    })()
+  }, [])
+
+  const onChangeValue = e =>{
+    setLocation({
+      latitude: e.nativeEvent.coordinate.latitude,
+      longitude: e.nativeEvent.coordinate.longitude,
+    })
   }
-  return (
-    <Modal transparent visible={showModal}>
-      <View style={styles.modalBackGround}>
-        <Animated.View
-          style={[styles.modalContainer, {transform: [{scale: scaleValue}]}]}>
-          {children}
-        </Animated.View>
-      </View>
-    </Modal>
-  )
-}
+  async function onCityChange (location) {
+    let town = await (Location.reverseGeocodeAsync({
+      latitude: location.latitude,
+      longitude: location.longitude
+        
+    }))
+    if (town){
+      {console.log(town)}
+    }
+   
+  }
 
-const testScreen = () => {
-  const [visible, setVisible] = React.useState(false)
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <ModalPoup visible={visible}>
-        <View style={{alignItems: 'center'}}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <AntDesign name="closecircle" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{alignItems: 'center'}}>
-          <AntDesign name="checkcircle" size={24} color="black" />
-        </View>
 
-        <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
-          Congratulations registration was successful
-        </Text>
-      </ModalPoup>
-      <Button title="Open Modal" onPress={() => setVisible(true)} />
+    <View style={styles.container}>
+      {/* {console.log(text)} */}
+      {errorMsg? <Text>{errorMsg}</Text>: null}
+
+      {location != null ?    
+        <View>       
+          <MapView
+            
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            followsUserLocation={false}
+            initialRegion={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            onPress={ onChangeValue}
+            style={styles.map}
+  
+          >
+        
+            <Marker 
+              coordinate = {{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421}}
+            />
+            
+          </MapView> 
+          <View
+            style={{
+              position: 'absolute',//use absolute position to show button on top of the map
+              top: '85%', //for center align
+              alignSelf: 'center' //for align to right
+            }}
+          >
+            <Button onPress={() => navigation.goBack(),onCityChange(location)} >Choose Location</Button>
+          </View>       
+        </View>
+        : <ActivityIndicator size="large"  color={colors.greenPrimary}/>}
+      
+         
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  modalBackGround: {
+
+  paragraph: {
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
     alignItems: 'center',
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 20,
-    elevation: 20,
-  },
-  header: {
-    width: '100%',
-    height: 40,
-    alignItems: 'flex-end',
     justifyContent: 'center',
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 })
-
-export default testScreen
