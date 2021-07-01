@@ -15,29 +15,10 @@ import AuthContext from '../auth/context'
 export default function MainNavigation() {
 
   const Stack = createStackNavigator()
-  const [user, setUser] = useState();
+  const [user, setUser] = useState()
 
 
   return (
-<<<<<<< HEAD
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-
-        <Stack.Screen name='Onboarding' component={OnboardingScreen} />
-        <Stack.Screen name='Test' component={testScreen} />
-
-        <Stack.Screen name='SignIn' component={LoginScreen} />
-        <Stack.Screen name='SignUp' component={SignUpScreen} />
-        <Stack.Screen name='AddCase' component={AddCaseScreen} />
-        <Stack.Screen name='ForgetPassword' component={PasswordRecoveryScreen} />
-        <Stack.Screen name='Navigator' component={TabNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
-=======
 
     <AuthContext.Provider value={{ user, setUser }} >
       <NavigationContainer>
@@ -58,7 +39,6 @@ export default function MainNavigation() {
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
->>>>>>> a137ec14a0a256f57fbc5a52f2c7929527d3edd0
   )
 }
 
