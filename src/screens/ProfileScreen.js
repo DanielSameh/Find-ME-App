@@ -81,15 +81,15 @@ const ProfileScreen = ({ navigation }) => {
         </RowView>
         <VerticalSpace height={15} />
         <View>
-          <Typography textAlign='center' fontSize={23} fontWeight='400'>
-                        Samuel Amin
+          <Typography textAlign='center' fontSize='23px' fontWeight='400'>
+            Samuel Amin
           </Typography>
         </View>
       </HeaderView>
 
       <FlatList
         data={menuItem}
-        keyExtractor={(item) => item.id.toString}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ListItem
             title={item.title}

@@ -15,7 +15,7 @@ import AuthContext from '../auth/context'
 export default function MainNavigation() {
 
   const Stack = createStackNavigator()
-  const [user, setUser] = useState();
+  const [user, setUser] = useState()
 
 
   return (
@@ -23,7 +23,7 @@ export default function MainNavigation() {
     <AuthContext.Provider value={{ user, setUser }} >
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='SignIn'
+          initialRouteName='Onboarding'
           screenOptions={{
             headerShown: false,
           }}

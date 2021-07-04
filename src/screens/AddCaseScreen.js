@@ -15,9 +15,12 @@ import Button from '../components/core/Button'
 import routes from '../navigation/routes'
 import ImageInputList from '../components/core/ImageInputList'
 
+
 const AddCaseScreen = ({ navigation }) => {
-  const [imageUris, setImageUris] = useState([]);
-  const [date, setDate] = useState('"01-01-2021"')
+  const [imageUris, setImageUris] = useState([])
+  const [date, setDate] = useState(new Date())
+  const [show, setShow] = useState(false)
+
   return (
     <View>
       <ScrollView>
@@ -79,9 +82,16 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Date of Loss</Title>
           </Row>
-          <CustomDatePicker date={date} onDateChange={(date) => {
-            setDate(date)
-          }} />
+
+          <Button onPress={() => setShow(true)} fontColor='gray' backColor='white' >
+            {date.toDateString()}
+          </Button>
+          <CustomDatePicker date={date} show={show}
+            onChange={(e, newdate) => {
+              const currentDate = newdate || date
+              setDate(currentDate)
+              setShow(false)
+            }} />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Phone Number</Title>
