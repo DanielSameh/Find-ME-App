@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   StyleSheet,
   View,
@@ -6,10 +6,10 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList
-} from "react-native";
+} from 'react-native'
 
-import Modal from "react-native-modal";
-import { Entypo } from "@expo/vector-icons";
+import Modal from 'react-native-modal'
+import { Entypo } from '@expo/vector-icons'
 
 const ImagePoPUp = ({ showModel, setShowModel, handelPress }) => {
   const items = [
@@ -25,7 +25,7 @@ const ImagePoPUp = ({ showModel, setShowModel, handelPress }) => {
       iconName: 'image',
       type: 'g'
     },
-  ];
+  ]
   return <View  >
     <Modal
       visible={showModel}
@@ -57,9 +57,9 @@ const ImagePoPUp = ({ showModel, setShowModel, handelPress }) => {
 const styles = StyleSheet.create({
   content: {
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white"
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
 })
 
