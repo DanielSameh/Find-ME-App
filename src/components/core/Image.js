@@ -14,17 +14,17 @@ const CustomImage = ({
 }) => {
   return (
     <TouchableOpacity style={[styles.continer,
-      {
-        height,
-        width,
-        borderTopLeftRadius,
-        borderTopRightRadius,
-        borderBottomLeftRadius,
-        borderBottomRightRadius,
+    {
+      height,
+      width,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
 
-      }]}
-    activeOpacity={1}
-    onPress={onPress}>
+    }]}
+      activeOpacity={1}
+      onPress={onPress}>
       <Image
         style={[styles.image, {
           borderTopLeftRadius,

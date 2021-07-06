@@ -6,6 +6,7 @@ import Home from '../screens/Home'
 import CaseDetailsScreen from '../screens/CaseDetailsScreen'
 import Icon from '../components/core/Icon'
 import routes from './routes'
+import EditCaseScreen from '../screens/EditCaseScreen'
 
 
 const Stack = createStackNavigator()
@@ -22,9 +23,10 @@ const HomeNavigator = ({ navigation }) => {
             backgroundColor: '#2DDA93',
             height: 140
           },
+          headerLeft: null,
           headerTitle: () => (
             <Text style={{ fontSize: 30, color: 'white' }}>
-                            Lost cases
+              Lost cases
             </Text>
           ),
 
@@ -42,7 +44,7 @@ const HomeNavigator = ({ navigation }) => {
           )
         }}
       />
-          
+
       <Stack.Screen
         name={'Details'}
         component={CaseDetailsScreen}
@@ -50,7 +52,14 @@ const HomeNavigator = ({ navigation }) => {
           headerShown: false
         }}
       />
-      
+      <Stack.Screen
+        name={'Edit'}
+        component={EditCaseScreen}
+        options={{
+          headerShown: false
+        }}
+      />
+
     </Stack.Navigator>
   )
 }

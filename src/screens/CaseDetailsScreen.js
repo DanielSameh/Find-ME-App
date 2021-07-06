@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, ImageBackground, ScrollView } from 'react-native'
-import { Entypo, EvilIcons } from '@expo/vector-icons'
+import { Entypo, EvilIcons, MaterialIcons } from '@expo/vector-icons'
+
 import Container from '../components/layout/ContainerView'
 import colors from '../components/styles/colors'
 import Circle from '../components/core/Circle'
@@ -12,42 +13,64 @@ import styled from 'styled-components'
 import CustomImage from '../components/core/Image'
 import VerticalLine from '../components/layout/VerticalLine'
 import Icon from '../components/core/Icon'
+import useApi from '../hooks/useApi'
+import caseApi from '../api/cases'
 
 const CaseDetailsScreen = ({ route, navigation }) => {
-
   const lostCase = route.params
+  const caseId = {
+    _id: lostCase._id,
+  }
+
+  const lostCaseApi = useApi(caseApi.deleteCase)
+  const deleteCase = async () => {
+    await lostCaseApi.request(caseId).then(navigation.pop())
+  }
+
   return (
-    <Container bc='white'  >
+    <Container bc='white'>
       <View style={{ height: 300, width: '100%' }}>
-        <ImageBackground style={{ height: 300 }} source={{ uri: lostCase.uri }} >
+        <ImageBackground style={{ height: 300 }} source={{ uri: lostCase.images[0] }}>
           <VerticalSpace height={32} />
           <RowView>
             <Icon
               backgroundColor='rgba(255, 255, 255, 0.2)'
-              size={56}
+              size='56px'
               borderRadius={'27px'}
-              onPress={() => { navigation.pop() }}
-              IconComponent={<Entypo name="chevron-left" size={32} color="white" />}
+              onPress={() => {
+                navigation.pop()
+              }}
+              IconComponent={<Entypo name='chevron-left' size={32} color='white' />}
             />
-            <Icon
-              backgroundColor='rgba(255, 255, 255, 0.2)'
-              size={56}
-              borderRadius={'27px'}
-              onPress={() => { }}
-              IconComponent={<Entypo name="edit" size={32} color="white" />}
-            />
+            <Row>
+              <Icon
+                backgroundColor='rgba(255, 255, 255, 0.2)'
+                size='56px'
+                borderRadius={'27px'}
+                onPress={() => {
+                  navigation.navigate('Edit', lostCase)
+                }}
+                IconComponent={<Entypo name='edit' size={32} color='white' />}
+              />
+              <HorizontalSpace width='5px' />
+              <Icon
+                backgroundColor='rgba(255, 255, 255, 0.2)'
+                size='56px'
+                borderRadius={'27px'}
+                onPress={() => {
+                  deleteCase()
+                }}
+                IconComponent={<MaterialIcons name='delete' size={32} color='white' />}
+              />
+            </Row>
           </RowView>
         </ImageBackground>
       </View>
-      <Scroll >
+      <Scroll>
         <VerticalSpace height={44} />
         <RowView>
-          <Typography
-            fontColor={colors.black}
-            fontWeight='bold'
-            fontSize='18px'
-          >
-            {lostCase.caseName}
+          <Typography fontColor={colors.black} fontWeight='bold' fontSize='18px'>
+            {lostCase.name}
           </Typography>
           <Row direction='flex-start'>
             <Circle
@@ -64,14 +87,13 @@ const CaseDetailsScreen = ({ route, navigation }) => {
               fontWeight='bold'
               fontSize='16px'
             >
-              {lostCase.state}
+              {lostCase.isFounded ? 'Founded' : 'Not Founded'}
             </Typography>
           </Row>
         </RowView>
-        <VerticalSpace height= {24} />
+        <VerticalSpace height={24} />
         <View style={{ height: 32 }}>
           <Row direction='flex-start'>
-
             <CustomImage
               width={32}
               uri='https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU'
@@ -82,64 +104,57 @@ const CaseDetailsScreen = ({ route, navigation }) => {
             />
             <HorizontalSpace />
             <Typography fontColor='black' fontWeight='700'>
-                            Ahmed Mohamed
+              Ahmed Mohamed
             </Typography>
           </Row>
         </View>
         <VerticalLine />
         <Typography fontColor='black' fontSize={'17px'} fontWeight='700'>
-                    Description
+          Description
         </Typography>
         <VerticalSpace height={8} />
         <Typography fontColor='black' fontSize={'15px'} fontWeight='500' isParagrapgh>
-                    There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour
+          {lostCase.description}
         </Typography>
         <VerticalLine />
         <Row direction='flex-start'>
-
           <Typography fontColor='black' fontSize={'17px'} fontWeight='700'>
-                        Location
+            Location
           </Typography>
           <HorizontalSpace width={'24px'} />
-          <EvilIcons name="location" size={24} color="#9FA5C0" />
-          <Typography
-            fontColor='#9FA5C0'
-            fontWeight='bold'
-            fontSize='16px'
-          >
-            {lostCase.caseLocation}
-          </Typography>
+          <EvilIcons name='location' size={24} color='#9FA5C0' />
+          <Typography fontColor='#9FA5C0' fontWeight='bold' fontSize='16px'></Typography>
         </Row>
         <VerticalLine />
         <Typography fontColor='black' fontSize={'17px'} fontWeight='700'>
-                    Phone
+          Phone
         </Typography>
         <VerticalSpace />
         <Row>
-          <Typography fontColor='black' fontSize={'17px'} fontWeight='700' >
-                        +20 1234567890
+          <Typography fontColor='black' fontSize={'17px'} fontWeight='700'>
+            {lostCase.phone}
           </Typography>
         </Row>
         <VerticalLine />
       </Scroll>
-    </Container >
+    </Container>
   )
 }
 
 export default CaseDetailsScreen
 
 const RowView = styled(View)`
-width: 100%;
-padding-left: 10;
-padding-right: 10;
-flex-direction : row;
-align-self:flex-start;
-justify-content: space-between ;
-align-items: center;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-direction: row;
+  align-self: flex-start;
+  justify-content: space-between;
+  align-items: center;
 `
 const Scroll = styled(ScrollView)`
   top: -30px;
-  bottom:30px ;
+  bottom: 30px;
   border-top-right-radius: 32px;
   border-top-left-radius: 32px;
   padding-left: 24px;

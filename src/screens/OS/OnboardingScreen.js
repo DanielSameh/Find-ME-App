@@ -7,16 +7,16 @@ import Row from '../../components/layout/Row'
 import HorizontalSpace from '../../components/layout/HorizontalSpace'
 import VerticalSpace from '../../components/layout/VerticalSpace'
 import colors from '../../components/styles/colors'
-import AuthContext from "../../auth/context"
-import authStorage from "../../auth/storage"
+import AuthContext from '../../auth/context'
+import authStorage from '../../auth/storage'
 
 const OnboardingScreen = ({ navigation }) => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext)
 
   const restoreUser = async () => {
     const user = await authStorage.getUser()
-    if (user) setUser(user);
-  };
+    if (user) setUser(user)
+  }
 
   useEffect(() => {
     restoreUser()

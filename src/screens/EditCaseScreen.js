@@ -17,43 +17,42 @@ import ImageInputList from '../components/core/ImageInputList'
 import useApi from '../hooks/useApi'
 import casesApi from '../api/cases'
 
+const EditCaseScreen = ({ route, navigation }) => {
+  const caseDetails = route.params
+  //console.log(caseDetails)
 
-const AddCaseScreen = ({ navigation }) => {
-  const [imageUris, setImageUris] = useState([])
-  const [date, setDate] = useState(new Date())
+  const [imageUris, setImageUris] = useState(caseDetails.images)
+  const [date, setDate] = useState(new Date(caseDetails.lostDate))
   const [show, setShow] = useState(false)
-  const uploadCaseApi = useApi(casesApi.uploadCase)
-  const { handleSubmit, control, formState: { errors } } = useForm()
+  const editCaseApi = useApi(casesApi.editCase)
+  const { handleSubmit, control } = useForm()
 
-  const onSubmit = async (info) => {
-
-    info.images = ['https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU']
-    info.lostDate = date.toJSON()
-    info.coordinates = [
-      -73.856077,
-      32.848447
+  const onSubmit = async info => {
+    info.images = [
+      'https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU',
     ]
+    info.lostDate = date.toJSON()
+    info.coordinates = [-73.856077, 32.848447]
     info.age = Number(info.age)
+    info._id = caseDetails._id
     console.log(info)
 
-    const result = await uploadCaseApi.request(info)
+    const result = await editCaseApi.request(info)
 
-    console.log(result)
+    //  console.log(result)
     navigation.navigate(routes.HOME)
-
   }
-  console.log(uploadCaseApi.loading)
+  //console.log(uploadCaseApi.loading)
 
   return (
-
     <View>
-      {uploadCaseApi.loading ? <View></View> : null}
+      {editCaseApi.loading ? <View></View> : null}
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
-            <TouchableOpacity onPress={() => navigation.navigate(routes.HOME)}>
+            <TouchableOpacity onPress={() => navigation.pop()}>
               <Title fontWeight={'700'} fontColor={'#FF6464'}>
                 Cancel
               </Title>
@@ -67,15 +66,11 @@ const AddCaseScreen = ({ navigation }) => {
 
           <ImageInputList
             imageUris={imageUris}
-            onAddImage={(uri) => {
-              setImageUris(
-                [...imageUris, uri]
-              )
+            onAddImage={uri => {
+              setImageUris([...imageUris, uri])
             }}
-            onRemoveImage={(uri) => {
-              setImageUris(
-                imageUris.filter((imageUri) => imageUri !== uri)
-              )
+            onRemoveImage={uri => {
+              setImageUris(imageUris.filter(imageUri => imageUri !== uri))
             }}
           />
           <VerticalSpace />
@@ -84,7 +79,7 @@ const AddCaseScreen = ({ navigation }) => {
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
           <Input inputPlaceHolder={'Enter location here'}>
-            <EvilIcons name="location" size={24} color="#9FA5C0" />
+            <EvilIcons name='location' size={24} color='#9FA5C0' />
           </Input>
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
@@ -93,27 +88,30 @@ const AddCaseScreen = ({ navigation }) => {
           <Controller
             control={control}
             name='name'
+            defaultValue={caseDetails.name}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={'case name'}
+                inputPlaceHolder={caseDetails.name}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
             )}
-          /><Row direction={'flex-start'}>
+          />
+          <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>
           </Row>
           <Controller
             control={control}
             name='description'
+            defaultValue={caseDetails.description}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 isDescription
                 Height={'150px'}
-                inputPlaceHolder={'Tell me what happened and the details'}
+                inputPlaceHolder={caseDetails.description}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -125,31 +123,35 @@ const AddCaseScreen = ({ navigation }) => {
           </Row>
           <Controller
             control={control}
+            defaultValue={caseDetails.age.toString()}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={'Age'}
+                inputPlaceHolder={caseDetails.age.toString()}
                 keyboardType='numeric'
-                onTermChange={value => onChange(value)} term={value}
+                onTermChange={value => onChange(value)}
+                term={value}
               ></Input>
             )}
             name='age'
-            defaultValue=''
           />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Date of Loss</Title>
           </Row>
 
-          <Button onPress={() => setShow(true)} fontColor='gray' backColor='white' >
+          <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
             {date.toDateString()}
           </Button>
-          <CustomDatePicker date={date} show={show}
+          <CustomDatePicker
+            date={date}
+            show={show}
             onChange={(e, newdate) => {
               const currentDate = newdate || date
               setDate(currentDate)
               setShow(false)
-            }} />
+            }}
+          />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Phone Number</Title>
@@ -157,23 +159,23 @@ const AddCaseScreen = ({ navigation }) => {
           <Controller
             control={control}
             name='phone'
+            defaultValue={caseDetails.phone}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
-
-              <Input keyboardType='phone-pad'
-                inputPlaceHolder={'Enter phone No. contact with'}
+              <Input
+                keyboardType='phone-pad'
+                inputPlaceHolder={caseDetails.phone}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
             )}
           />
 
-          <Button onPress={handleSubmit(onSubmit)} >Next</Button>
+          <Button onPress={handleSubmit(onSubmit)}>Next</Button>
         </Container>
         <VerticalSpace height={40} />
       </ScrollView>
     </View>
-
   )
 }
-export default AddCaseScreen
+export default EditCaseScreen
