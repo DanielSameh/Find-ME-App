@@ -3,6 +3,7 @@ import { Image, StyleSheet, TouchableOpacity } from 'react-native'
 
 const CustomImage = ({
   uri,
+  assets,
   onError,
   onPress,
   borderTopRightRadius = 0,
@@ -10,31 +11,53 @@ const CustomImage = ({
   borderBottomRightRadius = 0,
   borderBottomLeftRadius = 0,
   height,
-  width
+  width,
 }) => {
   return (
-    <TouchableOpacity style={[styles.continer,
-      {
-        height,
-        width,
-        borderTopLeftRadius,
-        borderTopRightRadius,
-        borderBottomLeftRadius,
-        borderBottomRightRadius,
-
-      }]}
-    activeOpacity={1}
-    onPress={onPress}>
-      <Image
-        style={[styles.image, {
+    <TouchableOpacity
+      style={[
+        styles.continer,
+        {
+          height,
+          width,
           borderTopLeftRadius,
           borderTopRightRadius,
           borderBottomLeftRadius,
           borderBottomRightRadius,
-        }]}
-        onError={onError}
-        source={{ uri }}
-      />
+        },
+      ]}
+      activeOpacity={1}
+      onPress={onPress}
+    >
+      {uri ? (
+        <Image
+          style={[
+            styles.image,
+            {
+              borderTopLeftRadius,
+              borderTopRightRadius,
+              borderBottomLeftRadius,
+              borderBottomRightRadius,
+            },
+          ]}
+          onError={onError}
+          source={{ uri }}
+        />
+      ) : (
+        <Image
+          style={[
+            styles.image,
+            {
+              borderTopLeftRadius,
+              borderTopRightRadius,
+              borderBottomLeftRadius,
+              borderBottomRightRadius,
+            },
+          ]}
+          onError={onError}
+          source={assets}
+        />
+      )}
     </TouchableOpacity>
   )
 }
@@ -50,4 +73,3 @@ const styles = StyleSheet.create({
 })
 
 export default CustomImage
-

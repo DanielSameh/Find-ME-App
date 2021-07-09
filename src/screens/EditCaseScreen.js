@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
-
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -25,46 +24,50 @@ import useImageConvert from '../hooks/useImageConvert'
 
 const phoneRegExp = /^01[0-2]{1}[0-9]{8}$/
 
-const uploadSchema = yup.object().shape({
-  name: yup.string().required(),
-  description: yup.string().required(),
-  phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
-  age: yup.number('must be number').required('must be number'),
-})
+const EditCaseScreen = ({ route, navigation }) => {
+  const caseDetails = route.params
 
-const AddCaseScreen = ({ navigation }) => {
+  const editSchema = yup.object().shape({
+    name: yup.string().required().default(caseDetails.name),
+    description: yup.string().required().default(caseDetails.description),
+    phone: yup
+      .string()
+      .required()
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .default(caseDetails.phone),
+    age: yup.number().required('must be number').default(caseDetails.age),
+  })
   const netInfo = useNetInfo()
-  const [imageUris, setImageUris] = useState([])
-  const [date, setDate] = useState(new Date())
+  const [imageUris, setImageUris] = useState(caseDetails.images)
+  const [date, setDate] = useState(new Date(caseDetails.lostDate))
+  const [show, setShow] = useState(false)
+  const editCaseApi = useApi(casesApi.editCase)
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
   const [checked, setChecked] = React.useState('man')
-
-  const [show, setShow] = useState(false)
-  const uploadCaseApi = useApi(casesApi.uploadCase)
   const {
     handleSubmit,
     control,
     formState: { errors },
     register,
-  } = useForm({ resolver: yupResolver(uploadSchema) })
+  } = useForm({ resolver: yupResolver(editSchema) })
 
   const onSubmit = async info => {
-    setError(false)
     if (imageUris.length === 0) {
       alert('Please upload image')
       return
     }
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
-    info.gender = checked
     info.lostDate = date.toJSON()
+    info.gender = checked
     info.coordinates = [-73.856077, 32.848447]
     info.age = Number(info.age)
+    info._id = caseDetails._id
     console.log(info)
 
     if (netInfo.isConnected) {
-      await uploadCaseApi
+      await editCaseApi
         .request(info)
         .then(() => navigation.navigate(routes.HOME))
         .catch(e => {
@@ -74,9 +77,10 @@ const AddCaseScreen = ({ navigation }) => {
           } else {
             setMessage('something is wrong try again')
           }
+          console.log(e)
         })
     } else {
-      alert('Plaese Check Internet')
+      alert('please check internet')
       return
     }
   }
@@ -88,7 +92,7 @@ const AddCaseScreen = ({ navigation }) => {
           <VerticalSpace />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
-            <TouchableOpacity onPress={() => navigation.navigate(routes.HOME)}>
+            <TouchableOpacity onPress={() => navigation.pop()}>
               <Title fontWeight={'700'} fontColor={'#FF6464'}>
                 Cancel
               </Title>
@@ -114,11 +118,9 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
-
           <Input inputPlaceHolder={'Enter location here'}>
             <EvilIcons name='location' size={24} color='#9FA5C0' />
           </Input>
-
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case name</Title>
@@ -127,16 +129,17 @@ const AddCaseScreen = ({ navigation }) => {
             shouldUnregister={register('name')}
             control={control}
             name='name'
-            rules={{ required: true }}
+            defaultValue={caseDetails.name}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={'case name'}
+                inputPlaceHolder={caseDetails.name}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
             )}
           />
           {errors.name && <Text style={styles.warningText}>{errors.name.message}</Text>}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>
@@ -145,12 +148,12 @@ const AddCaseScreen = ({ navigation }) => {
             shouldUnregister={register('description')}
             control={control}
             name='description'
-            rules={{ required: true }}
+            defaultValue={caseDetails.description}
             render={({ field: { onChange, value } }) => (
               <Input
                 isDescription
                 Height={'150px'}
-                inputPlaceHolder={'Tell me what happened and the details'}
+                inputPlaceHolder={caseDetails.description}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -159,6 +162,7 @@ const AddCaseScreen = ({ navigation }) => {
           {errors.description && (
             <Text style={styles.warningText}>{errors.description.message}</Text>
           )}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case Age</Title>
@@ -166,19 +170,24 @@ const AddCaseScreen = ({ navigation }) => {
           <Controller
             shouldUnregister={register('age')}
             control={control}
-            rules={{ required: true }}
+            defaultValue={caseDetails.age.toString()}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={'Age'}
+                inputPlaceHolder={caseDetails.age.toString()}
                 keyboardType='numeric'
                 onTermChange={value => onChange(value)}
                 term={value}
               ></Input>
             )}
             name='age'
-            defaultValue=''
           />
-          {errors.age && <Text style={styles.warningText}>enter valid number </Text>}
+          {errors.age && <Text style={styles.warningText}>{errors.age.message}</Text>}
+
+          <Row direction={'flex-start'}>
+            <HorizontalSpace width={'19px'} />
+            <Title fontWeight={'700'}>Date of Loss</Title>
+          </Row>
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>gender</Title>
@@ -197,12 +206,6 @@ const AddCaseScreen = ({ navigation }) => {
             />
             <Text>woman</Text>
           </Row>
-
-          <Row direction={'flex-start'}>
-            <HorizontalSpace width={'19px'} />
-            <Title fontWeight={'700'}>Date of Loss</Title>
-          </Row>
-
           <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
             {date.toDateString()}
           </Button>
@@ -220,13 +223,14 @@ const AddCaseScreen = ({ navigation }) => {
             <Title fontWeight={'700'}>Phone Number</Title>
           </Row>
           <Controller
+            shouldUnregister={register('phone')}
             control={control}
             name='phone'
-            shouldUnregister={register('phone')}
+            defaultValue={caseDetails.phone}
             render={({ field: { onChange, value } }) => (
               <Input
                 keyboardType='phone-pad'
-                inputPlaceHolder={'Enter phone No. contact with'}
+                inputPlaceHolder={caseDetails.phone}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -254,4 +258,4 @@ const styles = StyleSheet.create({
     color: colors.watermelonColor,
   },
 })
-export default AddCaseScreen
+export default EditCaseScreen
