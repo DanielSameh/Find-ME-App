@@ -52,7 +52,7 @@ const menuItem = [
 ]
 
 const ProfileScreen = ({ navigation }) => {
-  const { logOut, user } = useAuth()
+  const { logOut } = useAuth()
   const getUser = useApi(userApi.me)
   const [currentUser, setCurrentUser] = useState('')
 
