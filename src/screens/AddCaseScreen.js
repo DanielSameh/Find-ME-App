@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { View ,TouchableOpacity} from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-
-
+import { ScrollView,  } from 'react-native-gesture-handler'
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
@@ -14,10 +12,12 @@ import HorizontalSpace from '../components/layout/HorizontalSpace'
 import Button from '../components/core/Button'
 import routes from '../navigation/routes'
 import ImageInputList from '../components/core/ImageInputList'
+import TestScreen from './OS/testScreen'
 
 const AddCaseScreen = ({ navigation }) => {
-  const [imageUris, setImageUris] = useState([]);
+  const [imageUris, setImageUris] = useState([])
   const [date, setDate] = useState('"01-01-2021"')
+  const [visibleMap, setVisibleMap] = useState(false)
   return (
     <View>
       <ScrollView>
@@ -55,9 +55,13 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
-          <Input inputPlaceHolder={'Enter location here'}>
-            <EvilIcons name="location" size={24} color="#9FA5C0" />
-          </Input>
+          <TouchableOpacity onPress={() =>setVisibleMap(true)}>
+            {visibleMap?    <TestScreen visible ={visibleMap}/> : null}
+         
+            <Input inputPlaceHolder={'Enter location here'}>
+              <EvilIcons name="location" size={24} color="#9FA5C0" />
+            </Input>
+          </TouchableOpacity>
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>

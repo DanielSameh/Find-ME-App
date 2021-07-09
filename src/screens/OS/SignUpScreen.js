@@ -38,7 +38,7 @@ const SignUpScreen = ({ navigation }) => {
       Object.entries(userInfo).filter(([key, value]) => key !== 'equalPassword')
     )
 
-    const { data } = await registerApi.request(d);
+    const { data } = await registerApi.request(d)
 
     login(data.token)
     console.log(data.token)
