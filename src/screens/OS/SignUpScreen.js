@@ -42,6 +42,7 @@ const SignUpScreen = ({ navigation }) => {
       Object.entries(userInfo).filter(([key, value]) => key !== 'equalPassword'),
     )
 
+
     await registerApi
       .request(data)
       .then(res => {
@@ -57,6 +58,7 @@ const SignUpScreen = ({ navigation }) => {
           setMessage('something is wrong try again')
         }
       })
+
   }
 
   return (

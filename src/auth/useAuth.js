@@ -16,6 +16,7 @@ export default useAuth = () => {
     var user = null
     setUser(null)
     user = jwtDecode(authToken)
+
     setUser(user)
     authstorage.storeToken(authToken)
   }

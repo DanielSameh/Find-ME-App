@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { RadioButton } from 'react-native-paper'
 
 import colors from '../components/styles/colors'
+
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
@@ -81,6 +82,7 @@ const AddCaseScreen = ({ navigation }) => {
     }
   }
 
+
   return (
     <View>
       <ScrollView>
@@ -114,7 +116,6 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
-
           <Input inputPlaceHolder={'Enter location here'}>
             <EvilIcons name='location' size={24} color='#9FA5C0' />
           </Input>
@@ -137,6 +138,7 @@ const AddCaseScreen = ({ navigation }) => {
             )}
           />
           {errors.name && <Text style={styles.warningText}>{errors.name.message}</Text>}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>

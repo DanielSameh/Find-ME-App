@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode'
 const key = 'authToken'
 
 const storeToken = async authToken => {
+
   try {
     await SecureStore.setItemAsync(key, authToken)
   } catch (error) {
@@ -37,4 +38,6 @@ export default {
   getUser,
   getToken,
   removeToken,
+
 }
+
