@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { Snackbar } from 'react-native-paper'
 
+import colors from '../components/styles/colors'
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
@@ -16,37 +20,88 @@ import routes from '../navigation/routes'
 import ImageInputList from '../components/core/ImageInputList'
 import useApi from '../hooks/useApi'
 import casesApi from '../api/cases'
+import useNetInfo from '../hooks/useNetInfo'
+import useImageConvert from '../hooks/useImageConvert'
+
+const phoneRegExp = /^01[0-2]{1}[0-9]{8}$/
 
 const EditCaseScreen = ({ route, navigation }) => {
   const caseDetails = route.params
-  //console.log(caseDetails)
 
+  const editSchema = yup.object().shape({
+    name: yup.string().required().default(caseDetails.name),
+    description: yup.string().required().default(caseDetails.description),
+    phone: yup
+      .string()
+      .required()
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .default(caseDetails.phone),
+    age: yup.number().required('must be number').default(caseDetails.age),
+  })
+  const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState(caseDetails.images)
   const [date, setDate] = useState(new Date(caseDetails.lostDate))
   const [show, setShow] = useState(false)
   const editCaseApi = useApi(casesApi.editCase)
-  const { handleSubmit, control } = useForm()
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    register,
+  } = useForm({ resolver: yupResolver(editSchema) })
 
   const onSubmit = async info => {
-    info.images = [
-      'https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU',
-    ]
+    if (imageUris.length === 0) {
+      alert('Please upload image')
+      return
+    }
+    const imageConvert = useImageConvert(imageUris)
+    info.images = await imageConvert.getImagesUri()
     info.lostDate = date.toJSON()
     info.coordinates = [-73.856077, 32.848447]
     info.age = Number(info.age)
     info._id = caseDetails._id
     console.log(info)
 
-    const result = await editCaseApi.request(info)
-
-    //  console.log(result)
-    navigation.navigate(routes.HOME)
+    if (netInfo.isConnected) {
+      await editCaseApi.request(info)
+      if (editCaseApi.error) {
+        return
+      } else {
+        navigation.navigate(routes.HOME)
+      }
+    } else {
+      alert('please check internet')
+      return
+    }
   }
-  //console.log(uploadCaseApi.loading)
 
   return (
     <View>
-      {editCaseApi.loading ? <View></View> : null}
+      {editCaseApi.loading ? (
+        <Snackbar
+          visible={editCaseApi.loading}
+          duration={7000}
+          onDismiss={() => {
+            setSnakbar(false)
+          }}
+        >
+          Loading
+        </Snackbar>
+      ) : null}
+      {editCaseApi.error ? (
+        <Snackbar
+          visible={editCaseApi.error}
+          duration={7000}
+          onDismiss={() => {
+            setSnakbar(false)
+          }}
+        >
+          Error
+        </Snackbar>
+      ) : null}
+
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
@@ -86,10 +141,10 @@ const EditCaseScreen = ({ route, navigation }) => {
             <Title fontWeight={'700'}>Case name</Title>
           </Row>
           <Controller
+            shouldUnregister={register('name')}
             control={control}
             name='name'
             defaultValue={caseDetails.name}
-            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 inputPlaceHolder={caseDetails.name}
@@ -98,15 +153,17 @@ const EditCaseScreen = ({ route, navigation }) => {
               />
             )}
           />
+          {errors.name && <Text style={styles.warningText}>{errors.name.message}</Text>}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>
           </Row>
           <Controller
+            shouldUnregister={register('description')}
             control={control}
             name='description'
             defaultValue={caseDetails.description}
-            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 isDescription
@@ -117,14 +174,18 @@ const EditCaseScreen = ({ route, navigation }) => {
               />
             )}
           />
+          {errors.description && (
+            <Text style={styles.warningText}>{errors.description.message}</Text>
+          )}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case Age</Title>
           </Row>
           <Controller
+            shouldUnregister={register('age')}
             control={control}
             defaultValue={caseDetails.age.toString()}
-            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 inputPlaceHolder={caseDetails.age.toString()}
@@ -135,6 +196,8 @@ const EditCaseScreen = ({ route, navigation }) => {
             )}
             name='age'
           />
+          {errors.age && <Text style={styles.warningText}>{errors.age.message}</Text>}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Date of Loss</Title>
@@ -157,10 +220,10 @@ const EditCaseScreen = ({ route, navigation }) => {
             <Title fontWeight={'700'}>Phone Number</Title>
           </Row>
           <Controller
+            shouldUnregister={register('phone')}
             control={control}
             name='phone'
             defaultValue={caseDetails.phone}
-            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 keyboardType='phone-pad'
@@ -170,6 +233,7 @@ const EditCaseScreen = ({ route, navigation }) => {
               />
             )}
           />
+          {errors.phone && <Text style={styles.warningText}>{errors.phone.message}</Text>}
 
           <Button onPress={handleSubmit(onSubmit)}>Next</Button>
         </Container>
@@ -178,4 +242,12 @@ const EditCaseScreen = ({ route, navigation }) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  warningText: {
+    alignSelf: 'flex-end',
+    marginRight: 30,
+    color: colors.watermelonColor,
+  },
+})
 export default EditCaseScreen

@@ -17,7 +17,7 @@ import useApi from '../hooks/useApi'
 import caseApi from '../api/cases'
 
 const CaseDetailsScreen = ({ route, navigation }) => {
-  const lostCase = route.params
+  const { lostCase, user } = route.params
   const caseId = {
     _id: lostCase._id,
   }
@@ -48,7 +48,7 @@ const CaseDetailsScreen = ({ route, navigation }) => {
                 size='56px'
                 borderRadius={'27px'}
                 onPress={() => {
-                  navigation.navigate('Edit', lostCase)
+                  navigation.navigate('EditCase', lostCase)
                 }}
                 IconComponent={<Entypo name='edit' size={32} color='white' />}
               />
@@ -104,7 +104,7 @@ const CaseDetailsScreen = ({ route, navigation }) => {
             />
             <HorizontalSpace />
             <Typography fontColor='black' fontWeight='700'>
-              Ahmed Mohamed
+              {user.name}
             </Typography>
           </Row>
         </View>

@@ -10,28 +10,34 @@ const CustomImage = ({
   borderBottomRightRadius = 0,
   borderBottomLeftRadius = 0,
   height,
-  width
+  width,
 }) => {
   return (
-    <TouchableOpacity style={[styles.continer,
-    {
-      height,
-      width,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-
-    }]}
-      activeOpacity={1}
-      onPress={onPress}>
-      <Image
-        style={[styles.image, {
+    <TouchableOpacity
+      style={[
+        styles.continer,
+        {
+          height,
+          width,
           borderTopLeftRadius,
           borderTopRightRadius,
           borderBottomLeftRadius,
           borderBottomRightRadius,
-        }]}
+        },
+      ]}
+      activeOpacity={1}
+      onPress={onPress}
+    >
+      <Image
+        style={[
+          styles.image,
+          {
+            borderTopLeftRadius,
+            borderTopRightRadius,
+            borderBottomLeftRadius,
+            borderBottomRightRadius,
+          },
+        ]}
         onError={onError}
         source={{ uri }}
       />
@@ -50,4 +56,3 @@ const styles = StyleSheet.create({
 })
 
 export default CustomImage
-

@@ -6,12 +6,11 @@ import HorizontalSpace from '../layout/HorizontalSpace'
 
 const ListItem = ({ onPress, title, LeftIconComponent, RightIconComponent }) => {
   return (
-
     <Container activeOpacity={0.5} onPress={onPress}>
-      <Container activeOpacity={0.5} justify='flex-start'>
+      <Container activeOpacity={0.5} justify='flex-start' onPress={onPress}>
         {LeftIconComponent}
         <HorizontalSpace width={'10px'} />
-        <Typography fontColor='black' fontWeight='400' fontsize='15px'>
+        <Typography fontColor='black' fontWeight='400'>
           {title}
         </Typography>
       </Container>
@@ -20,15 +19,14 @@ const ListItem = ({ onPress, title, LeftIconComponent, RightIconComponent }) => 
   )
 }
 const Container = styled(TouchableOpacity)`
-
-align-items: center;
-justify-content: ${props => props.justify || 'space-between'};
-flex-direction: row;
-width: 100%;
-padding-left: 10px;
-padding-right:75px;
-padding-top: 15px;
-padding-bottom: 15px;
-background-color: white;
+  align-items: center;
+  justify-content: ${props => props.justify || 'space-between'};
+  flex-direction: row;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 75px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: white;
 `
 export default ListItem

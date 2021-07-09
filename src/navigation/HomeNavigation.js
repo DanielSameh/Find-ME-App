@@ -1,17 +1,12 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { Text } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Home from '../screens/Home'
 import CaseDetailsScreen from '../screens/CaseDetailsScreen'
-import Icon from '../components/core/Icon'
-import routes from './routes'
-import EditCaseScreen from '../screens/EditCaseScreen'
-
 
 const Stack = createStackNavigator()
 
-const HomeNavigator = ({ navigation }) => {
+const HomeNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -21,27 +16,11 @@ const HomeNavigator = ({ navigation }) => {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#2DDA93',
-            height: 140
+            height: 130,
           },
           headerLeft: null,
-          headerTitle: () => (
-            <Text style={{ fontSize: 30, color: 'white' }}>
-              Lost cases
-            </Text>
-          ),
-
-          headerRight: (
-          ) => (
-            <Icon
-              backgroundColor='white'
-              bottom='0px'
-              borderRadius='15px'
-              size='50px'
-              marign='10px'
-              onPress={() => { navigation.navigate(routes.ADD) }}
-              IconComponent={<MaterialCommunityIcons name='plus' size={32} color='#2DDA93' />}
-            />
-          )
+          headerTitle: () => <Text style={{ fontSize: 30, color: 'white' }}>Lost cases</Text>,
+          headerTitleAlign: 'center',
         }}
       />
 
@@ -49,17 +28,9 @@ const HomeNavigator = ({ navigation }) => {
         name={'Details'}
         component={CaseDetailsScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
-      <Stack.Screen
-        name={'Edit'}
-        component={EditCaseScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-
     </Stack.Navigator>
   )
 }
