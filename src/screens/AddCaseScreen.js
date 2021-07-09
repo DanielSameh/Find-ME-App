@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
+
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -79,6 +80,7 @@ const AddCaseScreen = ({ navigation }) => {
       return
     }
   }
+
   return (
     <View>
       <ScrollView>
@@ -112,9 +114,11 @@ const AddCaseScreen = ({ navigation }) => {
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
+
           <Input inputPlaceHolder={'Enter location here'}>
             <EvilIcons name='location' size={24} color='#9FA5C0' />
           </Input>
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case name</Title>

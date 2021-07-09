@@ -4,6 +4,7 @@ import { Text } from 'react-native'
 import Home from '../screens/Home'
 import CaseDetailsScreen from '../screens/CaseDetailsScreen'
 
+
 const Stack = createStackNavigator()
 
 const HomeNavigator = () => {
