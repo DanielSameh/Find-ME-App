@@ -7,14 +7,14 @@ import SignUpScreen from '../screens/OS/SignUpScreen'
 import testScreen from '../screens/OS/testScreen'
 import PasswordRecoveryScreen from '../screens/OS/PasswordRecoveryScreen'
 import OnboardingScreen from '../screens/OS/OnboardingScreen'
-import AddCaseScreen from '../screens/AddCaseScreen'
+import AddLostCaseScreen from '../screens/AddLostCaseScreen'
+import AddFoundCaseScreen from '../screens/AddFoundCaseScreen'
 import AuthContext from '../auth/context'
 import EditCaseScreen from '../screens/EditCaseScreen'
 
 export default function MainNavigation() {
   const Stack = createStackNavigator()
   const [user, setUser] = useState()
-
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
@@ -29,7 +29,8 @@ export default function MainNavigation() {
           <Stack.Screen name='SignIn' component={LoginScreen} />
           <Stack.Screen name='SignUp' component={SignUpScreen} />
           <Stack.Screen name='Test' component={testScreen} />
-          <Stack.Screen name='AddCase' component={AddCaseScreen} />
+          <Stack.Screen name='AddLostCase' component={AddLostCaseScreen} />
+          <Stack.Screen name='AddFoundCase' component={AddFoundCaseScreen} />
           <Stack.Screen name='EditCase' component={EditCaseScreen} />
           <Stack.Screen name='ForgetPassword' component={PasswordRecoveryScreen} />
           <Stack.Screen name='Navigator' component={TabNavigator} />

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ImageBackground, ScrollView } from 'react-native'
 import { Entypo, EvilIcons, MaterialIcons } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
 
 import Container from '../components/layout/ContainerView'
 import colors from '../components/styles/colors'
@@ -15,11 +16,26 @@ import VerticalLine from '../components/layout/VerticalLine'
 import Icon from '../components/core/Icon'
 import useApi from '../hooks/useApi'
 import caseApi from '../api/cases'
+import useLocation from '../hooks/useLocation'
 
 const CaseDetailsScreen = ({ route, navigation }) => {
   const { lostCase, user } = route.params
+  const location = useLocation()
+  const [city, setCity] = useState('')
   const caseId = {
     _id: lostCase._id,
+  }
+
+  const getCity = async () => {
+    console.log(lostCase.location)
+    await location
+      .getCity(lostCase.location.coordinates[0], lostCase.location.coordinates[1])
+      .then(v => {
+        setCity(v[0].region)
+      })
+      .catch(() => {
+        setCity('Giza')
+      })
   }
 
   const lostCaseApi = useApi(caseApi.deleteCase)
@@ -27,8 +43,14 @@ const CaseDetailsScreen = ({ route, navigation }) => {
     await lostCaseApi
       .request(caseId)
       .then(() => navigation.pop())
-      .catch(console.log(e))
+      .catch(e => {
+        console.log(e)
+      })
   }
+
+  useFocusEffect(() => {
+    getCity()
+  })
 
   return (
     <Container bc='white'>
@@ -127,7 +149,9 @@ const CaseDetailsScreen = ({ route, navigation }) => {
           </Typography>
           <HorizontalSpace width={'24px'} />
           <EvilIcons name='location' size={24} color='#9FA5C0' />
-          <Typography fontColor='#9FA5C0' fontWeight='bold' fontSize='16px'></Typography>
+          <Typography fontColor='#9FA5C0' fontWeight='bold' fontSize='16px'>
+            {city}
+          </Typography>
         </Row>
         <VerticalLine />
         <Typography fontColor='black' fontSize={'17px'} fontWeight='700'>

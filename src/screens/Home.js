@@ -22,8 +22,10 @@ const Home = ({ navigation }) => {
     const { data } = await getUser.request()
     setCurrentUser(data)
   }
+
   const fetchCases = async () => {
-    console.log(user)
+    setSnakbar(false)
+    //   console.log(user)
     await lostCaseApi
       .request(user._id)
       .then(value => {
@@ -76,7 +78,7 @@ const Home = ({ navigation }) => {
                     borderTopRadius={16}
                     caseName={item.name}
                     state={item.isFound ? 'Founded' : 'Not Founded'}
-                    caseLocation='Cairo'
+                    caseLocation='Giza'
                   />
                 </View>
                 <VerticalSpace height={5} />

@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { View, Text,Modal, StyleSheet, ScrollView, TouchableOpacity,Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
 
 import { useForm, Controller } from 'react-hook-form'
@@ -33,12 +41,13 @@ const uploadSchema = yup.object().shape({
   age: yup.number('must be number').required('must be number'),
 })
 
-const AddCaseScreen = ({ navigation }) => {
+const AddLostCaseScreen = ({ navigation }) => {
   const [locationStore, setLocationStore] = useState(null)
   const [coordinate, setCoordinate] = useState({
     latitude: 0,
-    longitude: 0})
-  console.log(coordinate.latitude,coordinate.longitude)
+    longitude: 0,
+  })
+  console.log(coordinate.latitude, coordinate.longitude)
   const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
@@ -64,12 +73,11 @@ const AddCaseScreen = ({ navigation }) => {
     }
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
-    info.gender = checked
+    //info.gender = checked
     info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
     console.log(info)
- 
 
     if (netInfo.isConnected) {
       await uploadCaseApi
@@ -88,7 +96,6 @@ const AddCaseScreen = ({ navigation }) => {
       return
     }
   }
-
 
   return (
     <View>
@@ -119,33 +126,41 @@ const AddCaseScreen = ({ navigation }) => {
             }}
           />
           <VerticalSpace />
-          
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
-          <TouchableOpacity  onPress={()=>{setModalVisible(!modalVisible)}}>
-            <Input isDisable inputPlaceHolder={` ${locationStore ? locationStore[0].region:'Enter location here'}`} >
-              <EvilIcons name="location" size={24} color="#9FA5C0" />
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(!modalVisible)
+            }}
+          >
+            <Input
+              isDisable
+              inputPlaceHolder={` ${
+                locationStore ? locationStore[0].region : 'Enter location here'
+              }`}
+            >
+              <EvilIcons name='location' size={24} color='#9FA5C0' />
             </Input>
           </TouchableOpacity>
           <Modal
-            animationType="slide"
+            animationType='slide'
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              
               setModalVisible(!modalVisible)
             }}
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <MapScreen
-                  liveLocation = {locationStore}
-                  onChangeLocation={(location)=>setLocationStore(location)}
+                  liveLocation={locationStore}
+                  onChangeLocation={location => setLocationStore(location)}
                   modalVisible={modalVisible}
-                  onModalChange={(visible)=>setModalVisible(visible)}
-                  onCoordinateChange={(coord)=>setCoordinate(coord)}
+                  onModalChange={visible => setModalVisible(visible)}
+                  onCoordinateChange={coord => setCoordinate(coord)}
                 />
                 {/* <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
@@ -296,10 +311,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
-    flex:1,
+    flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
     margin: 20,
@@ -310,16 +325,16 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
@@ -330,11 +345,11 @@ const styles = StyleSheet.create({
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 })
-export default AddCaseScreen
+export default AddLostCaseScreen

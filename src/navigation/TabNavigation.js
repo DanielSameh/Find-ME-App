@@ -2,7 +2,7 @@ import React from 'react'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import AddScreen from '../screens/AddCaseScreen'
+import AddLostCase from '../screens/AddLostCaseScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 
 import Icon from '../components/core/Icon'
@@ -25,7 +25,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name={'Add'}
-        component={AddScreen}
+        component={AddLostCase}
         options={({ navigation }) => ({
           tabBarButton: () => (
             <Icon
@@ -35,7 +35,7 @@ const TabNavigator = () => {
               size='80px'
               IconComponent={<MaterialCommunityIcons name='plus' size={40} color='white' />}
               onPress={() => {
-                navigation.navigate('AddCase')
+                navigation.navigate('AddLostCase')
               }}
             />
           ),

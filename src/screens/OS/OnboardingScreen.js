@@ -43,7 +43,9 @@ const OnboardingScreen = ({ navigation }) => {
           Lost Kid
         </Button>
         <HorizontalSpace width={'30px'} />
-        <Button width={'100%'}>Found Kid</Button>
+        <Button width={'100%'} onPress={() => navigation.navigate('AddFoundCase')}>
+          Found Kid
+        </Button>
       </Row>
     </Container>
   )
