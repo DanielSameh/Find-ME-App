@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text,Modal, StyleSheet, ScrollView, TouchableOpacity,Dimensions } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
 
 import { useForm, Controller } from 'react-hook-form'
@@ -8,7 +8,7 @@ import * as yup from 'yup'
 import { RadioButton } from 'react-native-paper'
 
 import colors from '../components/styles/colors'
-
+import MapScreen from '../components/core/MapScreen'
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
@@ -34,13 +34,19 @@ const uploadSchema = yup.object().shape({
 })
 
 const AddCaseScreen = ({ navigation }) => {
+  const [locationStore, setLocationStore] = useState(null)
+  const [coordinate, setCoordinate] = useState({
+    latitude: 0,
+    longitude: 0})
+  console.log(coordinate.latitude,coordinate.longitude)
+  const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
   const [date, setDate] = useState(new Date())
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
   const [checked, setChecked] = React.useState('man')
-
+  // const [location, setLocation] = useState(null)
   const [show, setShow] = useState(false)
   const uploadCaseApi = useApi(casesApi.uploadCase)
   const {
@@ -60,9 +66,10 @@ const AddCaseScreen = ({ navigation }) => {
     info.images = await imageConvert.getImagesUri()
     info.gender = checked
     info.lostDate = date.toJSON()
-    info.coordinates = [-73.856077, 32.848447]
+    info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
     console.log(info)
+ 
 
     if (netInfo.isConnected) {
       await uploadCaseApi
@@ -112,13 +119,43 @@ const AddCaseScreen = ({ navigation }) => {
             }}
           />
           <VerticalSpace />
+          
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
           </Row>
-          <Input inputPlaceHolder={'Enter location here'}>
-            <EvilIcons name='location' size={24} color='#9FA5C0' />
-          </Input>
+          <TouchableOpacity  onPress={()=>{setModalVisible(!modalVisible)}}>
+            <Input isDisable inputPlaceHolder={` ${locationStore ? locationStore[0].region:'Enter location here'}`} >
+              <EvilIcons name="location" size={24} color="#9FA5C0" />
+            </Input>
+          </TouchableOpacity>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              
+              setModalVisible(!modalVisible)
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <MapScreen
+                  liveLocation = {locationStore}
+                  onChangeLocation={(location)=>setLocationStore(location)}
+                  modalVisible={modalVisible}
+                  onModalChange={(visible)=>setModalVisible(visible)}
+                  onCoordinateChange={(coord)=>setCoordinate(coord)}
+                />
+                {/* <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </TouchableOpacity> */}
+              </View>
+            </View>
+          </Modal>
 
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
@@ -255,5 +292,49 @@ const styles = StyleSheet.create({
     marginRight: 30,
     color: colors.watermelonColor,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22
+  },
+  modalView: {
+    flex:1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center'
+  }
 })
 export default AddCaseScreen
