@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Snackbar } from 'react-native-paper'
+import { RadioButton } from 'react-native-paper'
 
 import colors from '../components/styles/colors'
 import Input from '../components/core/Input'
@@ -43,7 +42,9 @@ const EditCaseScreen = ({ route, navigation }) => {
   const [date, setDate] = useState(new Date(caseDetails.lostDate))
   const [show, setShow] = useState(false)
   const editCaseApi = useApi(casesApi.editCase)
-
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState(false)
+  const [checked, setChecked] = React.useState('man')
   const {
     handleSubmit,
     control,
@@ -59,18 +60,25 @@ const EditCaseScreen = ({ route, navigation }) => {
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
     info.lostDate = date.toJSON()
+    info.gender = checked
     info.coordinates = [-73.856077, 32.848447]
     info.age = Number(info.age)
     info._id = caseDetails._id
     console.log(info)
 
     if (netInfo.isConnected) {
-      await editCaseApi.request(info)
-      if (editCaseApi.error) {
-        return
-      } else {
-        navigation.navigate(routes.HOME)
-      }
+      await editCaseApi
+        .request(info)
+        .then(() => navigation.navigate(routes.HOME))
+        .catch(e => {
+          setError(true)
+          if (e.toString().includes('400')) {
+            setMessage('please enter all information')
+          } else {
+            setMessage('something is wrong try again')
+          }
+          console.log(e)
+        })
     } else {
       alert('please check internet')
       return
@@ -79,29 +87,6 @@ const EditCaseScreen = ({ route, navigation }) => {
 
   return (
     <View>
-      {editCaseApi.loading ? (
-        <Snackbar
-          visible={editCaseApi.loading}
-          duration={7000}
-          onDismiss={() => {
-            setSnakbar(false)
-          }}
-        >
-          Loading
-        </Snackbar>
-      ) : null}
-      {editCaseApi.error ? (
-        <Snackbar
-          visible={editCaseApi.error}
-          duration={7000}
-          onDismiss={() => {
-            setSnakbar(false)
-          }}
-        >
-          Error
-        </Snackbar>
-      ) : null}
-
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
@@ -203,6 +188,24 @@ const EditCaseScreen = ({ route, navigation }) => {
             <Title fontWeight={'700'}>Date of Loss</Title>
           </Row>
 
+          <Row direction={'flex-start'}>
+            <HorizontalSpace width={'19px'} />
+            <Title fontWeight={'700'}>gender</Title>
+          </Row>
+          <Row>
+            <Text>man</Text>
+            <RadioButton
+              value='man'
+              status={checked === 'man' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('man')}
+            />
+            <RadioButton
+              value='woman'
+              status={checked === 'woman' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('woman')}
+            />
+            <Text>woman</Text>
+          </Row>
           <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
             {date.toDateString()}
           </Button>
@@ -210,9 +213,9 @@ const EditCaseScreen = ({ route, navigation }) => {
             date={date}
             show={show}
             onChange={(e, newdate) => {
+              setShow(false)
               const currentDate = newdate || date
               setDate(currentDate)
-              setShow(false)
             }}
           />
           <Row direction={'flex-start'}>
@@ -234,7 +237,12 @@ const EditCaseScreen = ({ route, navigation }) => {
             )}
           />
           {errors.phone && <Text style={styles.warningText}>{errors.phone.message}</Text>}
-
+          {error ? (
+            <View>
+              <VerticalSpace height={40} />
+              <Text style={styles.warningText}>{message}</Text>
+            </View>
+          ) : null}
           <Button onPress={handleSubmit(onSubmit)}>Next</Button>
         </Container>
         <VerticalSpace height={40} />

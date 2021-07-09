@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Snackbar } from 'react-native-paper'
+import { RadioButton } from 'react-native-paper'
 
 import colors from '../components/styles/colors'
 import Input from '../components/core/Input'
@@ -36,6 +35,9 @@ const AddCaseScreen = ({ navigation }) => {
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
   const [date, setDate] = useState(new Date())
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState(false)
+  const [checked, setChecked] = React.useState('man')
 
   const [show, setShow] = useState(false)
   const uploadCaseApi = useApi(casesApi.uploadCase)
@@ -46,27 +48,32 @@ const AddCaseScreen = ({ navigation }) => {
     register,
   } = useForm({ resolver: yupResolver(uploadSchema) })
 
-  console.log(imageUris.length)
   const onSubmit = async info => {
+    setError(false)
     if (imageUris.length === 0) {
       alert('Please upload image')
       return
     }
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
-
+    info.gender = checked
     info.lostDate = date.toJSON()
     info.coordinates = [-73.856077, 32.848447]
     info.age = Number(info.age)
     console.log(info)
 
     if (netInfo.isConnected) {
-      await uploadCaseApi.request(info)
-      if (uploadCaseApi.error) {
-        return
-      } else {
-        navigation.navigate(routes.HOME)
-      }
+      await uploadCaseApi
+        .request(info)
+        .then(() => navigation.navigate(routes.HOME))
+        .catch(e => {
+          setError(true)
+          if (e.toString().includes('400')) {
+            setMessage('please enter all information')
+          } else {
+            setMessage('something is wrong try again')
+          }
+        })
     } else {
       alert('Plaese Check Internet')
       return
@@ -74,29 +81,6 @@ const AddCaseScreen = ({ navigation }) => {
   }
   return (
     <View>
-      {uploadCaseApi.loading ? (
-        <Snackbar
-          visible={uploadCaseApi.loading}
-          duration={7000}
-          onDismiss={() => {
-            setSnakbar(false)
-          }}
-        >
-          Loading
-        </Snackbar>
-      ) : null}
-      {uploadCaseApi.error ? (
-        <Snackbar
-          visible={uploadCaseApi.error}
-          duration={7000}
-          onDismiss={() => {
-            setSnakbar(false)
-          }}
-        >
-          Error
-        </Snackbar>
-      ) : null}
-
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
@@ -190,7 +174,26 @@ const AddCaseScreen = ({ navigation }) => {
             name='age'
             defaultValue=''
           />
-          {errors.age && <Text style={styles.warningText}>{errors.age.message}</Text>}
+          {errors.age && <Text style={styles.warningText}>enter valid number </Text>}
+          <Row direction={'flex-start'}>
+            <HorizontalSpace width={'19px'} />
+            <Title fontWeight={'700'}>gender</Title>
+          </Row>
+          <Row>
+            <Text>man</Text>
+            <RadioButton
+              value='man'
+              status={checked === 'man' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('man')}
+            />
+            <RadioButton
+              value='woman'
+              status={checked === 'woman' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('woman')}
+            />
+            <Text>woman</Text>
+          </Row>
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Date of Loss</Title>
@@ -203,9 +206,9 @@ const AddCaseScreen = ({ navigation }) => {
             date={date}
             show={show}
             onChange={(e, newdate) => {
+              setShow(false)
               const currentDate = newdate || date
               setDate(currentDate)
-              setShow(false)
             }}
           />
           <Row direction={'flex-start'}>
@@ -226,6 +229,12 @@ const AddCaseScreen = ({ navigation }) => {
             )}
           />
           {errors.phone && <Text style={styles.warningText}>{errors.phone.message}</Text>}
+          {error ? (
+            <View>
+              <VerticalSpace height={40} />
+              <Text style={styles.warningText}>{message}</Text>
+            </View>
+          ) : null}
           <Button onPress={handleSubmit(onSubmit)}>Next</Button>
         </Container>
         <VerticalSpace height={40} />

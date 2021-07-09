@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { SimpleLineIcons } from '@expo/vector-icons'
@@ -16,8 +16,7 @@ import VerticalSpace from '../../components/layout/VerticalSpace'
 import useApi from '../../hooks/useApi'
 import userApi from '../../api/user'
 import useAuth from '../../auth/useAuth'
-const phoneRegExp =
-  /^01[0-2]{1}[0-9]{8}$/
+const phoneRegExp = /^01[0-2]{1}[0-9]{8}$/
 const SignUpSchema = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().required().email(),
@@ -29,7 +28,8 @@ const SignUpSchema = yup.object().shape({
 const SignUpScreen = ({ navigation }) => {
   const registerApi = useApi(userApi.signUp)
   const { login } = useAuth()
-
+  const [error, setError] = useState(false)
+  const [message, setMessage] = useState('')
   const {
     register,
     control,
@@ -37,15 +37,26 @@ const SignUpScreen = ({ navigation }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(SignUpSchema) })
   const onSubmit = async userInfo => {
-    const d = Object.fromEntries(
+    setError(false)
+    const data = Object.fromEntries(
       Object.entries(userInfo).filter(([key, value]) => key !== 'equalPassword'),
     )
 
-    const { data } = await registerApi.request(d)
-
-    login(data.token)
-    console.log(data.token)
-    navigation.navigate('Navigator')
+    await registerApi
+      .request(data)
+      .then(res => {
+        login(res.data.token)
+        console.log(res.data.token)
+        navigation.navigate('Navigator')
+      })
+      .catch(e => {
+        setError(true)
+        if (e.toString().includes('40')) {
+          setMessage('phone number or email already exists')
+        } else {
+          setMessage('something is wrong try again')
+        }
+      })
   }
 
   return (
@@ -201,6 +212,7 @@ const SignUpScreen = ({ navigation }) => {
         <View
           style={{ width: '80%', height: 1, backgroundColor: '#F5F5F5', borderRadius: 30 }}
         ></View>
+        {error ? <Text style={styles.warningText}>{message}</Text> : null}
         <Button title='Submit' onPress={handleSubmit(onSubmit)}>
           Sign Up
         </Button>
@@ -225,7 +237,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   warningText: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     marginRight: 30,
     color: colors.watermelonColor,
   },

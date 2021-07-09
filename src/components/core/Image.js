@@ -3,6 +3,7 @@ import { Image, StyleSheet, TouchableOpacity } from 'react-native'
 
 const CustomImage = ({
   uri,
+  assets,
   onError,
   onPress,
   borderTopRightRadius = 0,
@@ -28,19 +29,35 @@ const CustomImage = ({
       activeOpacity={1}
       onPress={onPress}
     >
-      <Image
-        style={[
-          styles.image,
-          {
-            borderTopLeftRadius,
-            borderTopRightRadius,
-            borderBottomLeftRadius,
-            borderBottomRightRadius,
-          },
-        ]}
-        onError={onError}
-        source={{ uri }}
-      />
+      {uri ? (
+        <Image
+          style={[
+            styles.image,
+            {
+              borderTopLeftRadius,
+              borderTopRightRadius,
+              borderBottomLeftRadius,
+              borderBottomRightRadius,
+            },
+          ]}
+          onError={onError}
+          source={{ uri }}
+        />
+      ) : (
+        <Image
+          style={[
+            styles.image,
+            {
+              borderTopLeftRadius,
+              borderTopRightRadius,
+              borderBottomLeftRadius,
+              borderBottomRightRadius,
+            },
+          ]}
+          onError={onError}
+          source={assets}
+        />
+      )}
     </TouchableOpacity>
   )
 }

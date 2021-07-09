@@ -3,7 +3,6 @@ import authStorage from '../auth/storage'
 
 const axiosClient = axios.create({
   baseURL: 'http://find-missing.me/api',
-  timeout: 2000
 })
 
 axiosClient.interceptors.request.use(request => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, FlatList } from 'react-native'
 import styled from 'styled-components'
 import { Ionicons } from '@expo/vector-icons'
@@ -13,11 +13,13 @@ import ListItem from '../components/core/ListItem'
 import routes from '../navigation/routes'
 import Icon from '../components/core/Icon'
 import useAuth from '../auth/useAuth'
+import userApi from '../api/user'
+import useApi from '../hooks/useApi'
 
 const menuItem = [
   {
     id: '1',
-    title: 'Account',
+    title: 'Sign Out',
     icon: {
       name: 'account-box',
       color: 'green',
@@ -50,7 +52,14 @@ const menuItem = [
 ]
 
 const ProfileScreen = ({ navigation }) => {
-  const { logOut } = useAuth()
+  const { logOut, user } = useAuth()
+  const getUser = useApi(userApi.me)
+  const [currentUser, setCurrentUser] = useState('')
+
+  useEffect(() => {
+    getUser.request().then(res => setCurrentUser(res.data))
+  }, [])
+
   return (
     <Container bc='white'>
       <HeaderView>
@@ -68,7 +77,8 @@ const ProfileScreen = ({ navigation }) => {
           <CustomImage
             width={80}
             height={80}
-            uri='https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU'
+            uri=''
+            assets={require('../../assets/people.png')}
             onError={() => {}}
             onPress={() => {}}
             borderBottomLeftRadius={40}
@@ -87,7 +97,7 @@ const ProfileScreen = ({ navigation }) => {
         <VerticalSpace height={15} />
         <View>
           <Typography textAlign='center' fontSize='23px' fontWeight='400'>
-            Samuel Amin
+            {currentUser.name}
           </Typography>
         </View>
       </HeaderView>

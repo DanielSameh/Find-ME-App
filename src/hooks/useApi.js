@@ -6,6 +6,7 @@ export default useApi = apiFunc => {
   const [loading, setLoading] = useState(false)
 
   const request = async (...args) => {
+    console.log(...args)
     setLoading(true)
     const response = await apiFunc(...args)
 

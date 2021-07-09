@@ -24,7 +24,10 @@ const CaseDetailsScreen = ({ route, navigation }) => {
 
   const lostCaseApi = useApi(caseApi.deleteCase)
   const deleteCase = async () => {
-    await lostCaseApi.request(caseId).then(navigation.pop())
+    await lostCaseApi
+      .request(caseId)
+      .then(() => navigation.pop())
+      .catch(console.log(e))
   }
 
   return (
@@ -96,7 +99,8 @@ const CaseDetailsScreen = ({ route, navigation }) => {
           <Row direction='flex-start'>
             <CustomImage
               width={32}
-              uri='https://i.picsum.photos/id/1014/200/300.jpg?hmac=nxBnyyuXuAKEA6yVxBtNN4YjpjaciQXA3KwTRICTlWU'
+              uri=''
+              assets={require('../../assets/people.png')}
               borderBottomLeftRadius={16}
               borderBottomRightRadius={16}
               borderTopLeftRadius={16}

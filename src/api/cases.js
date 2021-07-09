@@ -1,14 +1,13 @@
 import axiosClient from './client'
 
-let endpoint = '/case/lost/'
-
 const getAllCases = async id => {
-  endpoint = endpoint + id
+  const endpoint = '/case/lost/' + id
+
   return axiosClient.get(endpoint).catch(error => console.log(error))
 }
 
 const getOneCase = async (userId, caseId) => {
-  endpoint = endpoint + userId + '/' + caseId
+  const endpoint = '/case/lost/' + userId + '/' + caseId
   return axiosClient.get(endpoint).catch(error => console.log(error))
 }
 
@@ -19,11 +18,11 @@ const uploadImage = async image => {
 }
 
 const uploadCase = async info => {
-  return axiosClient.post('/case/lost', info).catch(error => console.log(error))
+  return axiosClient.post('/case/lost', info)
 }
 
 const editCase = async info => {
-  return axiosClient.put('/case/lost', info).catch(error => console.log(error))
+  return axiosClient.put('/case/lost', info)
 }
 
 const deleteCase = async id => {

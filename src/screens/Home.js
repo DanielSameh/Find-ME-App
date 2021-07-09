@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { FlatList, View, Text } from 'react-native'
-
 import { useFocusEffect } from '@react-navigation/native'
+import { Snackbar } from 'react-native-paper'
+
 import Card from '../components/core/Card'
 import VerticalSpace from '../components/layout/VerticalSpace'
 import routes from '../navigation/routes'
@@ -16,17 +17,21 @@ const Home = ({ navigation }) => {
   const [currentUser, setCurrentUser] = useState(user)
   const lostCaseApi = useApi(casesApi.getAllCases)
   const getUser = useApi(userApi.me)
-
+  const [snackbar, setSnakbar] = useState(false)
   const fectchUserInfo = async () => {
     const { data } = await getUser.request()
     setCurrentUser(data)
   }
   const fetchCases = async () => {
     console.log(user)
-    await lostCaseApi.request(user._id).then(value => {
-      setCases(value.data.cases)
-      user._id = ''
-    })
+    await lostCaseApi
+      .request(user._id)
+      .then(value => {
+        setCases(value.data.cases)
+      })
+      .catch(() => {
+        setSnakbar(true)
+      })
   }
   useEffect(() => {
     fectchUserInfo()
@@ -43,6 +48,16 @@ const Home = ({ navigation }) => {
   return (
     <View style={{ backgroundColor: '#E5E5E5' }}>
       <>
+        <Snackbar
+          visible={snackbar}
+          duration={7000}
+          onDismiss={() => {
+            setSnakbar(false)
+          }}
+        >
+          something is wrong
+        </Snackbar>
+
         {cases.length > 0 ? (
           <FlatList
             data={cases}

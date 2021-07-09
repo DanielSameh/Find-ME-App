@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useForm, Controller } from 'react-hook-form'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -23,6 +23,9 @@ const SignInSchema = yup.object().shape({
 })
 
 const LoginScreen = ({ navigation }) => {
+  const [error, setError] = useState(false)
+  const [message, setMessage] = useState('')
+
   const loginApi = useApi(userApi.signIn)
   const { login } = useAuth()
   const {
@@ -32,12 +35,21 @@ const LoginScreen = ({ navigation }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(SignInSchema) })
   const onSubmit = async userinfo => {
-    const { data } = await loginApi.request(userinfo)
-
-    console.log(data)
-    login(data.token)
-    console.log(data.token)
-    navigation.navigate('Navigator')
+    setError(false)
+    await loginApi
+      .request(userinfo)
+      .then(res => {
+        login(res.data.token)
+        navigation.navigate('Navigator')
+      })
+      .catch(e => {
+        setError(true)
+        if (e.toString().includes('401')) {
+          setMessage('phone number or email is wrong')
+        } else {
+          setMessage('something is wrong try again')
+        }
+      })
   }
 
   return (
@@ -106,6 +118,7 @@ const LoginScreen = ({ navigation }) => {
       >
         <Typography fontColor={'#2E3E5C'}>Forgot Password?</Typography>
       </TouchableOpacity>
+      {error ? <Text style={styles.warningText}>{message}</Text> : null}
       <Button title='Submit' onPress={handleSubmit(onSubmit)}>
         Login
       </Button>
@@ -131,7 +144,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   warningText: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     marginRight: 30,
     color: colors.watermelonColor,
   },
