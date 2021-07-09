@@ -14,11 +14,13 @@ const Input = ({
   onTermChange,
   onTermSubmit,
   keyboardType = 'default',
+  isDisable
 }) => {
   return (
     <InputView WD={Width} HG={Height} isSearch={isSearch} isDescription={isDescription}>
       {children}
       <InputField
+        editable={isDisable ? false : true}
         HG={Height}
         multiline={isDescription}
         isDescription={isDescription}

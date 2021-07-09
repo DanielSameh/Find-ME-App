@@ -1,29 +1,16 @@
 import React, { useState } from 'react'
-
-import {
-  Alert,
-  Image,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { Alert, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons'
-
-import styled from 'styled-components'
-
 import Title from './Title'
 import useImage from '../../hooks/useImage'
 import ImagePoPUp from './ImagePopUp'
 
-
-
 const ImageInput = ({ imageUri, onChangeImage }) => {
-
   const { selectImageFromCamera, selectImageFromGallery, requestPermission } = useImage()
   const [isVisible, setIsVisible] = useState(false)
 
-  const handlePress = async (type) => {
+  const handlePress = async type => {
     setIsVisible(false)
     requestPermission()
     if (!imageUri) {
@@ -32,9 +19,7 @@ const ImageInput = ({ imageUri, onChangeImage }) => {
         if (result !== null) {
           onChangeImage(result)
         }
-
       } else if (type === 'g') {
-
         const result = await selectImageFromGallery()
         if (result !== null) {
           onChangeImage(result)
@@ -58,10 +43,9 @@ const ImageInput = ({ imageUri, onChangeImage }) => {
     <View>
       <ImagePoPUp
         showModel={isVisible}
-        setShowModel={(value) => setIsVisible(value)}
-        handelPress={(value) => handlePress(value)}
+        setShowModel={value => setIsVisible(value)}
+        handelPress={value => handlePress(value)}
       />
-
 
       <View style={{ flexDirection: 'row' }}>
         {!imageUri && (
@@ -70,19 +54,22 @@ const ImageInput = ({ imageUri, onChangeImage }) => {
               <Ionicons style={styles.iconStyle} name='images' size={50} color='#D0DBEA' />
               <Title fontWeight={700}>Add Kid Photo</Title>
               <Title fontColor={'#9FA5C0'} fontSize={'12px'}>
-                                Up to (12 mb)
+                Up to (12 mb)
               </Title>
             </View>
           </TouchableWithoutFeedback>
         )}
-        {imageUri &&
-                    <TouchableWithoutFeedback onPress={() => { handlePress('non') }}>
-
-                      <View style={styles.imageContainer}>
-                        <Image source={{ uri: imageUri }} style={styles.image} />
-                      </View>
-                    </TouchableWithoutFeedback>
-        }
+        {imageUri && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              handlePress('non')
+            }}
+          >
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: imageUri }} style={styles.image} />
+            </View>
+          </TouchableWithoutFeedback>
+        )}
       </View>
     </View>
   )
@@ -120,7 +107,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 })
-
-
 
 export default ImageInput

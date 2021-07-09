@@ -8,7 +8,6 @@ import ProfileScreen from '../screens/ProfileScreen'
 import Icon from '../components/core/Icon'
 import HomeNavigator from './HomeNavigation'
 
-
 const Tab = createBottomTabNavigator()
 
 const TabNavigator = () => {
@@ -18,13 +17,10 @@ const TabNavigator = () => {
         name={'HomeNavigator'}
         component={HomeNavigator}
         options={{
-          tabBarIcon: ({ focused }) => <MaterialCommunityIcons
-            name='home'
-            size={40}
-            color={focused ? '#2DDA93' : '#D2D2D2'}
-          />,
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons name='home' size={40} color={focused ? '#2DDA93' : '#D2D2D2'} />
+          ),
           tabBarLabel: 'Home',
-
         }}
       />
       <Tab.Screen
@@ -50,15 +46,16 @@ const TabNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <MaterialCommunityIcons
-              name='account'
-              size={40}
-              color={focused ? '#2DDA93' : '#D2D2D2'}
-            />
+            return (
+              <MaterialCommunityIcons
+                name='account'
+                size={40}
+                color={focused ? '#2DDA93' : '#D2D2D2'}
+              />
+            )
           },
         }}
       />
-
     </Tab.Navigator>
   )
 }

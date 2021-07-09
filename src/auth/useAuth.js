@@ -12,8 +12,11 @@ export default useAuth = () => {
     authstorage.removeToken()
   }
 
-  const login = (authToken) => {
-    const user = jwtDecode(authToken)
+  const login = authToken => {
+    var user = null
+    setUser(null)
+    user = jwtDecode(authToken)
+
     setUser(user)
     authstorage.storeToken(authToken)
   }

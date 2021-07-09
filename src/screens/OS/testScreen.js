@@ -11,7 +11,6 @@ export default function testScreen({ navigation }) {
   const [location, setLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
 
-
   useEffect(() => {
     (async () => {
   

@@ -9,32 +9,28 @@ import PasswordRecoveryScreen from '../screens/OS/PasswordRecoveryScreen'
 import OnboardingScreen from '../screens/OS/OnboardingScreen'
 import AddCaseScreen from '../screens/AddCaseScreen'
 import AuthContext from '../auth/context'
-
-
+import EditCaseScreen from '../screens/EditCaseScreen'
 
 export default function MainNavigation() {
-
   const Stack = createStackNavigator()
   const [user, setUser] = useState()
 
 
   return (
-
-    <AuthContext.Provider value={{ user, setUser }} >
+    <AuthContext.Provider value={{ user, setUser }}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='SignIn'
+          initialRouteName='Onboarding'
           screenOptions={{
             headerShown: false,
           }}
         >
-
-          
           <Stack.Screen name='Onboarding' component={OnboardingScreen} />
           <Stack.Screen name='SignIn' component={LoginScreen} />
           <Stack.Screen name='SignUp' component={SignUpScreen} />
           <Stack.Screen name='Test' component={testScreen} />
           <Stack.Screen name='AddCase' component={AddCaseScreen} />
+          <Stack.Screen name='EditCase' component={EditCaseScreen} />
           <Stack.Screen name='ForgetPassword' component={PasswordRecoveryScreen} />
           <Stack.Screen name='Navigator' component={TabNavigator} />
         </Stack.Navigator>
@@ -42,5 +38,3 @@ export default function MainNavigation() {
     </AuthContext.Provider>
   )
 }
-
-
