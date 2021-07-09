@@ -25,10 +25,10 @@ export default function MainNavigation() {
             headerShown: false,
           }}
         >
-          {/* <Stack.Screen name='Test' component={testScreen} /> */}
           <Stack.Screen name='Onboarding' component={OnboardingScreen} />
           <Stack.Screen name='SignIn' component={LoginScreen} />
           <Stack.Screen name='SignUp' component={SignUpScreen} />
+          <Stack.Screen name='Test' component={testScreen} />
           <Stack.Screen name='AddCase' component={AddCaseScreen} />
           <Stack.Screen name='EditCase' component={EditCaseScreen} />
           <Stack.Screen name='ForgetPassword' component={PasswordRecoveryScreen} />
