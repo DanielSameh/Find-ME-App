@@ -34,19 +34,19 @@ const useImageConvert = imageUris => {
     return images
   }
 
-  const getFoundImageUri = async image => {
+  const getFoundImageUri = async (image, imagesId) => {
     if (image.includes('http')) {
       return image
     } else {
       const formData = getFormData(image)
-      const res = await foundCaseApi.uploadFoundImage(formData)
+      const res = await foundCaseApi.uploadFoundImage(formData, imagesId)
       return res.data.images[0]
     }
   }
 
-  const getFoundImagesUri = async () => {
+  const getFoundImagesUri = async imagesId => {
     var promises = imageUris.map(async x => {
-      const image = await getFoundImageUri(x)
+      const image = await getFoundImageUri(x, imagesId)
       return image
     })
 

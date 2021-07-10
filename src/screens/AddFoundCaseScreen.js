@@ -14,6 +14,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { RadioButton } from 'react-native-paper'
+import uuid from 'react-native-uuid'
 
 import colors from '../components/styles/colors'
 import MapScreen from '../components/core/MapScreen'
@@ -43,7 +44,6 @@ const AddFoundCaseScreen = ({ navigation }) => {
     latitude: 0,
     longitude: 0,
   })
-  console.log(coordinate.latitude, coordinate.longitude)
   const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
@@ -59,6 +59,8 @@ const AddFoundCaseScreen = ({ navigation }) => {
   } = useForm({ resolver: yupResolver(uploadSchema) })
 
   const onSubmit = async info => {
+    const imagesId = uuid.v4()
+
     setError(false)
     if (imageUris.length === 0) {
       alert('Please upload image')
@@ -67,7 +69,7 @@ const AddFoundCaseScreen = ({ navigation }) => {
     const imageConvert = useImageConvert(imageUris)
 
     console.log(locationStore)
-    info.images = await imageConvert.getFoundImagesUri()
+    info.images = await imageConvert.getFoundImagesUri(imagesId)
 
     info.gender = checked
     info.coordinates = [coordinate.latitude, coordinate.longitude]
@@ -78,7 +80,7 @@ const AddFoundCaseScreen = ({ navigation }) => {
     if (netInfo.isConnected) {
       console.log('upload 1')
       await uploadFoundCaseApi
-        .request(info)
+        .request(info, imagesId)
         .then(() => navigation.pop())
         .catch(e => {
           console.error('error1', e)
