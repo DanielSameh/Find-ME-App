@@ -13,6 +13,7 @@ import useAuth from '../auth/useAuth'
 
 const Home = ({ navigation }) => {
   const [cases, setCases] = useState([])
+
   const { user } = useAuth()
   const [currentUser, setCurrentUser] = useState(user)
   const lostCaseApi = useApi(casesApi.getAllCases)
@@ -78,7 +79,7 @@ const Home = ({ navigation }) => {
                     borderTopRadius={16}
                     caseName={item.name}
                     state={item.isFound ? 'Founded' : 'Not Founded'}
-                    caseLocation='Giza'
+                    caseLocation={item.city || 'cairo'}
                   />
                 </View>
                 <VerticalSpace height={5} />

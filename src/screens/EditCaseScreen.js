@@ -75,10 +75,11 @@ const EditCaseScreen = ({ route, navigation }) => {
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
     info.lostDate = date.toJSON()
-    //info.gender = checked
+    info.gender = checked
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
     info._id = caseDetails._id
+    info.city = locationStore[0].city.toLowerCase() || 'cairo'
 
     if (netInfo.isConnected) {
       await editCaseApi

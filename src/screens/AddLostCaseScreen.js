@@ -54,7 +54,7 @@ const AddLostCaseScreen = ({ navigation }) => {
   const [date, setDate] = useState(new Date())
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
-  const [checked, setChecked] = React.useState('man')
+  const [checked, setChecked] = React.useState('male')
   // const [location, setLocation] = useState(null)
   const [show, setShow] = useState(false)
   const uploadCaseApi = useApi(casesApi.uploadCase)
@@ -73,10 +73,11 @@ const AddLostCaseScreen = ({ navigation }) => {
     }
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
-    //info.gender = checked
+    info.gender = checked
     info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
+    info.city = locationStore[0].city.toLowerCase() || 'cairo'
     console.log(info)
 
     if (netInfo.isConnected) {
@@ -162,12 +163,6 @@ const AddLostCaseScreen = ({ navigation }) => {
                   onModalChange={visible => setModalVisible(visible)}
                   onCoordinateChange={coord => setCoordinate(coord)}
                 />
-                {/* <TouchableOpacity
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </Modal>
@@ -238,18 +233,18 @@ const AddLostCaseScreen = ({ navigation }) => {
             <Title fontWeight={'700'}>gender</Title>
           </Row>
           <Row>
-            <Text>man</Text>
+            <Text>male</Text>
             <RadioButton
               value='man'
-              status={checked === 'man' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('man')}
+              status={checked === 'male' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('male')}
             />
             <RadioButton
-              value='woman'
-              status={checked === 'woman' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('woman')}
+              value='female'
+              status={checked === 'female' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('female')}
             />
-            <Text>woman</Text>
+            <Text>female</Text>
           </Row>
 
           <Row direction={'flex-start'}>

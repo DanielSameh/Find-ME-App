@@ -34,7 +34,7 @@ const CaseDetailsScreen = ({ route, navigation }) => {
         setCity(v[0].region)
       })
       .catch(() => {
-        setCity('Giza')
+        setCity('cairo')
       })
   }
 

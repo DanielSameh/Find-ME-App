@@ -20,24 +20,21 @@ import MapScreen from '../components/core/MapScreen'
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
-import CustomDatePicker from '../components/core/CustomDatePicker'
 import Row from '../components/layout/Row'
 import VerticalSpace from '../components/layout/VerticalSpace'
 import HorizontalSpace from '../components/layout/HorizontalSpace'
 import Button from '../components/core/Button'
 import ImageInputList from '../components/core/ImageInputList'
 import useApi from '../hooks/useApi'
-import casesApi from '../api/cases'
+import foundCasesApi from '../api/foundCase'
 import useNetInfo from '../hooks/useNetInfo'
 import useImageConvert from '../hooks/useImageConvert'
 
 const phoneRegExp = /^01[0-2]{1}[0-9]{8}$/
 
 const uploadSchema = yup.object().shape({
-  name: yup.string().required(),
   description: yup.string().required(),
-  phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
-  age: yup.number('must be number').required('must be number'),
+  uploaderPhone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
 })
 
 const AddFoundCaseScreen = ({ navigation }) => {
@@ -50,12 +47,10 @@ const AddFoundCaseScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
-  const [date, setDate] = useState(new Date())
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
-  const [checked, setChecked] = React.useState('man')
-  const [show, setShow] = useState(false)
-  const uploadCaseApi = useApi(casesApi.uploadCase)
+  const [checked, setChecked] = React.useState('male')
+  const uploadFoundCaseApi = useApi(foundCasesApi.uploadFoundCase)
   const {
     handleSubmit,
     control,
@@ -70,18 +65,23 @@ const AddFoundCaseScreen = ({ navigation }) => {
       return
     }
     const imageConvert = useImageConvert(imageUris)
-    info.images = await imageConvert.getImagesUri()
+
+    console.log(locationStore)
+    info.images = await imageConvert.getFoundImagesUri()
+
     info.gender = checked
-    info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
-    info.age = Number(info.age)
+    info.city = locationStore[0].city.toLowerCase() || 'cairo'
+
     console.log(info)
 
     if (netInfo.isConnected) {
-      await uploadCaseApi
+      console.log('upload 1')
+      await uploadFoundCaseApi
         .request(info)
         .then(() => navigation.pop())
         .catch(e => {
+          console.error('error1', e)
           setError(true)
           if (e.toString().includes('400')) {
             setMessage('please enter all information')
@@ -160,35 +160,9 @@ const AddFoundCaseScreen = ({ navigation }) => {
                   onModalChange={visible => setModalVisible(visible)}
                   onCoordinateChange={coord => setCoordinate(coord)}
                 />
-                {/* <TouchableOpacity
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </Modal>
-
-          <Row direction={'flex-start'}>
-            <HorizontalSpace width={'19px'} />
-            <Title fontWeight={'700'}>Case name</Title>
-          </Row>
-          <Controller
-            shouldUnregister={register('name')}
-            control={control}
-            name='name'
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <Input
-                inputPlaceHolder={'case name'}
-                onTermChange={value => onChange(value)}
-                term={value}
-              />
-            )}
-          />
-          {errors.name && <Text style={styles.warningText}>{errors.name.message}</Text>}
-
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Description</Title>
@@ -211,70 +185,33 @@ const AddFoundCaseScreen = ({ navigation }) => {
           {errors.description && (
             <Text style={styles.warningText}>{errors.description.message}</Text>
           )}
-          <Row direction={'flex-start'}>
-            <HorizontalSpace width={'19px'} />
-            <Title fontWeight={'700'}>Case Age</Title>
-          </Row>
-          <Controller
-            shouldUnregister={register('age')}
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <Input
-                inputPlaceHolder={'Age'}
-                keyboardType='numeric'
-                onTermChange={value => onChange(value)}
-                term={value}
-              ></Input>
-            )}
-            name='age'
-            defaultValue=''
-          />
-          {errors.age && <Text style={styles.warningText}>enter valid number </Text>}
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>gender</Title>
           </Row>
           <Row>
-            <Text>man</Text>
+            <Text>male</Text>
             <RadioButton
-              value='man'
-              status={checked === 'man' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('man')}
+              value='male'
+              status={checked === 'male' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('male')}
             />
             <RadioButton
-              value='woman'
-              status={checked === 'woman' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('woman')}
+              value='female'
+              status={checked === 'female' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('female')}
             />
-            <Text>woman</Text>
+            <Text>female</Text>
           </Row>
-
-          <Row direction={'flex-start'}>
-            <HorizontalSpace width={'19px'} />
-            <Title fontWeight={'700'}>Date of Found</Title>
-          </Row>
-
-          <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
-            {date.toDateString()}
-          </Button>
-          <CustomDatePicker
-            date={date}
-            show={show}
-            onChange={(e, newdate) => {
-              setShow(false)
-              const currentDate = newdate || date
-              setDate(currentDate)
-            }}
-          />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Phone Number</Title>
           </Row>
           <Controller
             control={control}
-            name='phone'
-            shouldUnregister={register('phone')}
+            name='uploaderPhone'
+            shouldUnregister={register('uploaderPhone')}
             render={({ field: { onChange, value } }) => (
               <Input
                 keyboardType='phone-pad'
@@ -284,7 +221,9 @@ const AddFoundCaseScreen = ({ navigation }) => {
               />
             )}
           />
-          {errors.phone && <Text style={styles.warningText}>{errors.phone.message}</Text>}
+          {errors.uploaderPhone && (
+            <Text style={styles.warningText}>{errors.uploaderPhone.message}</Text>
+          )}
           {error ? (
             <View>
               <VerticalSpace height={40} />
@@ -350,4 +289,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
 export default AddFoundCaseScreen

@@ -5,11 +5,11 @@ const axiosClient = axios.create({
   baseURL: 'http://find-missing.me/api',
 })
 
-/*axiosClient.interceptors.request.use(request => {
+axiosClient.interceptors.request.use(request => {
   console.log('Starting Request', JSON.stringify(request, null, 2))
   return request
 })
-*/
+
 axiosClient.interceptors.request.use(
   async config => {
     const token = await authStorage.getToken()
