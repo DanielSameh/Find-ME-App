@@ -13,7 +13,7 @@ const getOneCase = async (userId, caseId) => {
 
 const uploadImage = async image => {
   return axiosClient
-    .post('/images/upload', image, { headers: { 'Content-Type': 'multipart/form-data' } })
+    .post('/images/upload/lost', image, { headers: { 'Content-Type': 'multipart/form-data' } })
     .catch(error => console.log(error))
 }
 

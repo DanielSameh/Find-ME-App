@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import * as Location from 'expo-location'
 
 const useLocation = () => {
-  useEffect(() => {
+  /* useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== 'granted') {
@@ -11,7 +11,7 @@ const useLocation = () => {
         return
       }
     })()
-  }, [])
+  }, [])*/
 
   const getCity = async (lat, long) => {
     const result = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long })

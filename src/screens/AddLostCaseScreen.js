@@ -2,20 +2,21 @@ import React, { useState } from 'react'
 import {
   View,
   Text,
+  Modal,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Modal,
   Dimensions,
 } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
+
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { RadioButton } from 'react-native-paper'
 
-import MapScreen from '../components/core/MapScreen'
 import colors from '../components/styles/colors'
+import MapScreen from '../components/core/MapScreen'
 import Input from '../components/core/Input'
 import Title from '../components/core/Title'
 import Container from '../components/layout/ContainerView'
@@ -33,60 +34,56 @@ import useImageConvert from '../hooks/useImageConvert'
 
 const phoneRegExp = /^01[0-2]{1}[0-9]{8}$/
 
-const EditCaseScreen = ({ route, navigation }) => {
-  const caseDetails = route.params
+const uploadSchema = yup.object().shape({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
+  age: yup.number('must be number').required('must be number'),
+})
+
+const AddLostCaseScreen = ({ navigation }) => {
   const [locationStore, setLocationStore] = useState(null)
-  const [modalVisible, setModalVisible] = useState(false)
   const [coordinate, setCoordinate] = useState({
-    latitude: caseDetails.location.coordinates[0],
-    longitude: caseDetails.location.coordinates[1],
+    latitude: 0,
+    longitude: 0,
   })
-  console.log(coordinate)
-  const editSchema = yup.object().shape({
-    name: yup.string().required().default(caseDetails.name),
-    description: yup.string().required().default(caseDetails.description),
-    phone: yup
-      .string()
-      .required()
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .default(caseDetails.phone),
-    age: yup.number().required('must be number').default(caseDetails.age),
-  })
+  console.log(coordinate.latitude, coordinate.longitude)
+  const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
-  const [imageUris, setImageUris] = useState(caseDetails.images)
-  const [date, setDate] = useState(new Date(caseDetails.lostDate))
-  const [show, setShow] = useState(false)
-  const editCaseApi = useApi(casesApi.editCase)
+  const [imageUris, setImageUris] = useState([])
+  const [date, setDate] = useState(new Date())
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
-  const [checked, setChecked] = React.useState('man')
+  const [checked, setChecked] = React.useState('male')
+  // const [location, setLocation] = useState(null)
+  const [show, setShow] = useState(false)
+  const uploadCaseApi = useApi(casesApi.uploadCase)
   const {
     handleSubmit,
     control,
     formState: { errors },
     register,
-  } = useForm({ resolver: yupResolver(editSchema) })
+  } = useForm({ resolver: yupResolver(uploadSchema) })
 
   const onSubmit = async info => {
+    setError(false)
     if (imageUris.length === 0) {
       alert('Please upload image')
       return
     }
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri()
-    info.lostDate = date.toJSON()
     info.gender = checked
+    info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
-    info._id = caseDetails._id
     info.city = locationStore[0].city.toLowerCase() || 'cairo'
+    console.log(info)
 
     if (netInfo.isConnected) {
-      await editCaseApi
+      await uploadCaseApi
         .request(info)
-        .then(() => {
-          navigation.navigate(routes.HOME)
-        })
+        .then(() => navigation.navigate(routes.HOME))
         .catch(e => {
           setError(true)
           if (e.toString().includes('400')) {
@@ -94,10 +91,9 @@ const EditCaseScreen = ({ route, navigation }) => {
           } else {
             setMessage('something is wrong try again')
           }
-          console.log(e)
         })
     } else {
-      alert('please check internet')
+      alert('Plaese Check Internet')
       return
     }
   }
@@ -109,7 +105,7 @@ const EditCaseScreen = ({ route, navigation }) => {
           <VerticalSpace />
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
-            <TouchableOpacity onPress={() => navigation.pop()}>
+            <TouchableOpacity onPress={() => navigation.navigate(routes.HOME)}>
               <Title fontWeight={'700'} fontColor={'#FF6464'}>
                 Cancel
               </Title>
@@ -131,6 +127,7 @@ const EditCaseScreen = ({ route, navigation }) => {
             }}
           />
           <VerticalSpace />
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Location Lost Case</Title>
@@ -166,15 +163,10 @@ const EditCaseScreen = ({ route, navigation }) => {
                   onModalChange={visible => setModalVisible(visible)}
                   onCoordinateChange={coord => setCoordinate(coord)}
                 />
-                {/* <TouchableOpacity
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </Modal>
+
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case name</Title>
@@ -183,10 +175,10 @@ const EditCaseScreen = ({ route, navigation }) => {
             shouldUnregister={register('name')}
             control={control}
             name='name'
-            defaultValue={caseDetails.name}
+            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={caseDetails.name}
+                inputPlaceHolder={'case name'}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -202,12 +194,12 @@ const EditCaseScreen = ({ route, navigation }) => {
             shouldUnregister={register('description')}
             control={control}
             name='description'
-            defaultValue={caseDetails.description}
+            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
                 isDescription
                 Height={'150px'}
-                inputPlaceHolder={caseDetails.description}
+                inputPlaceHolder={'Tell me what happened and the details'}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -216,7 +208,6 @@ const EditCaseScreen = ({ route, navigation }) => {
           {errors.description && (
             <Text style={styles.warningText}>{errors.description.message}</Text>
           )}
-
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Case Age</Title>
@@ -224,42 +215,43 @@ const EditCaseScreen = ({ route, navigation }) => {
           <Controller
             shouldUnregister={register('age')}
             control={control}
-            defaultValue={caseDetails.age.toString()}
+            rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Input
-                inputPlaceHolder={caseDetails.age.toString()}
+                inputPlaceHolder={'Age'}
                 keyboardType='numeric'
                 onTermChange={value => onChange(value)}
                 term={value}
               ></Input>
             )}
             name='age'
+            defaultValue=''
           />
-          {errors.age && <Text style={styles.warningText}>{errors.age.message}</Text>}
+          {errors.age && <Text style={styles.warningText}>enter valid number </Text>}
+          <Row direction={'flex-start'}>
+            <HorizontalSpace width={'19px'} />
+            <Title fontWeight={'700'}>gender</Title>
+          </Row>
+          <Row>
+            <Text>male</Text>
+            <RadioButton
+              value='man'
+              status={checked === 'male' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('male')}
+            />
+            <RadioButton
+              value='female'
+              status={checked === 'female' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('female')}
+            />
+            <Text>female</Text>
+          </Row>
 
           <Row direction={'flex-start'}>
             <HorizontalSpace width={'19px'} />
             <Title fontWeight={'700'}>Date of Loss</Title>
           </Row>
 
-          <Row direction={'flex-start'}>
-            <HorizontalSpace width={'19px'} />
-            <Title fontWeight={'700'}>gender</Title>
-          </Row>
-          <Row>
-            <Text>man</Text>
-            <RadioButton
-              value='man'
-              status={checked === 'man' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('man')}
-            />
-            <RadioButton
-              value='woman'
-              status={checked === 'woman' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('woman')}
-            />
-            <Text>woman</Text>
-          </Row>
           <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
             {date.toDateString()}
           </Button>
@@ -277,14 +269,13 @@ const EditCaseScreen = ({ route, navigation }) => {
             <Title fontWeight={'700'}>Phone Number</Title>
           </Row>
           <Controller
-            shouldUnregister={register('phone')}
             control={control}
             name='phone'
-            defaultValue={caseDetails.phone}
+            shouldUnregister={register('phone')}
             render={({ field: { onChange, value } }) => (
               <Input
                 keyboardType='phone-pad'
-                inputPlaceHolder={caseDetails.phone}
+                inputPlaceHolder={'Enter phone No. contact with'}
                 onTermChange={value => onChange(value)}
                 term={value}
               />
@@ -356,4 +347,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
-export default EditCaseScreen
+export default AddLostCaseScreen
