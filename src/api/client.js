@@ -14,6 +14,7 @@ axiosClient.interceptors.request.use(
   async config => {
     const token = await authStorage.getToken()
     config.headers = {
+      ...config.headers,
       Authorization: token ? `Bearer ${token}` : null,
       Accept: '*/*',
       'Content-Type': 'application/json',

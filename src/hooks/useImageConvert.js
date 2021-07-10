@@ -1,5 +1,6 @@
 import casesApi from '../api/cases'
 import foundCaseApi from '../api/foundCase'
+
 const useImageConvert = imageUris => {
   const getFormData = image => {
     const formData = new FormData()
@@ -12,19 +13,19 @@ const useImageConvert = imageUris => {
     return formData
   }
 
-  const getImageUri = async image => {
+  const getImageUri = async (image, imagesId) => {
     if (image.includes('http')) {
       return image
     } else {
       const formData = getFormData(image)
-      const res = await casesApi.uploadImage(formData)
+      const res = await casesApi.uploadImage(formData, imagesId)
       return res.data.images[0]
     }
   }
 
-  const getImagesUri = async () => {
+  const getImagesUri = async imagesId => {
     var promises = imageUris.map(async x => {
-      const image = await getImageUri(x)
+      const image = await getImageUri(x, imagesId)
       return image
     })
 
@@ -50,7 +51,6 @@ const useImageConvert = imageUris => {
     })
 
     const images = await Promise.all(promises)
-    console.log(images)
     return images
   }
 

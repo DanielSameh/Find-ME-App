@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons'
+import uuid from 'react-native-uuid'
 
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -47,7 +48,6 @@ const AddLostCaseScreen = ({ navigation }) => {
     latitude: 0,
     longitude: 0,
   })
-  console.log(coordinate.latitude, coordinate.longitude)
   const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
@@ -66,13 +66,15 @@ const AddLostCaseScreen = ({ navigation }) => {
   } = useForm({ resolver: yupResolver(uploadSchema) })
 
   const onSubmit = async info => {
+    const imagesId = uuid.v4()
     setError(false)
     if (imageUris.length === 0) {
       alert('Please upload image')
       return
     }
+
     const imageConvert = useImageConvert(imageUris)
-    info.images = await imageConvert.getImagesUri()
+    info.images = await imageConvert.getImagesUri(imagesId)
     info.gender = checked
     info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
@@ -82,7 +84,7 @@ const AddLostCaseScreen = ({ navigation }) => {
 
     if (netInfo.isConnected) {
       await uploadCaseApi
-        .request(info)
+        .request(info, imagesId)
         .then(() => navigation.navigate(routes.HOME))
         .catch(e => {
           setError(true)
@@ -120,6 +122,7 @@ const AddLostCaseScreen = ({ navigation }) => {
           <ImageInputList
             imageUris={imageUris}
             onAddImage={uri => {
+              console.log('TEST: ', uri)
               setImageUris([...imageUris, uri])
             }}
             onRemoveImage={uri => {
@@ -235,7 +238,7 @@ const AddLostCaseScreen = ({ navigation }) => {
           <Row>
             <Text>male</Text>
             <RadioButton
-              value='man'
+              value='male'
               status={checked === 'male' ? 'checked' : 'unchecked'}
               onPress={() => setChecked('male')}
             />

@@ -59,7 +59,7 @@ const EditCaseScreen = ({ route, navigation }) => {
   const editCaseApi = useApi(casesApi.editCase)
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
-  const [checked, setChecked] = React.useState('man')
+  const [checked, setChecked] = React.useState('male')
   const {
     handleSubmit,
     control,
@@ -247,18 +247,18 @@ const EditCaseScreen = ({ route, navigation }) => {
             <Title fontWeight={'700'}>gender</Title>
           </Row>
           <Row>
-            <Text>man</Text>
+            <Text>male</Text>
             <RadioButton
-              value='man'
-              status={checked === 'man' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('man')}
+              value='male'
+              status={checked === 'male' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('male')}
             />
             <RadioButton
-              value='woman'
-              status={checked === 'woman' ? 'checked' : 'unchecked'}
-              onPress={() => setChecked('woman')}
+              value='female'
+              status={checked === 'female' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('female')}
             />
-            <Text>woman</Text>
+            <Text>female</Text>
           </Row>
           <Button onPress={() => setShow(true)} fontColor='gray' backColor='white'>
             {date.toDateString()}
