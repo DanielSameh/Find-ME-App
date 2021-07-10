@@ -85,7 +85,6 @@ const AddFoundCaseScreen = ({ navigation }) => {
       await uploadFoundCaseApi
         .request(info, imagesId)
         .then((res) => {
-          //  navigation.pop()
           setShow(true)
           console.log(res.data.hasMatch[0])
           setInfo(res.data.hasMatch[0])
@@ -112,6 +111,7 @@ const AddFoundCaseScreen = ({ navigation }) => {
         transparent={true}
         onRequestClose={() => {
           setShow(!show)
+          navigation.pop()
         }}
       >
         <View style={styles.centeredView}>
