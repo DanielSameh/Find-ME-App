@@ -70,7 +70,7 @@ const AddFoundCaseScreen = ({ navigation }) => {
 
     console.log(locationStore)
     info.images = await imageConvert.getFoundImagesUri(imagesId)
-
+    info.imagesId = imagesId
     info.gender = checked
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.city = locationStore[0].city.toLowerCase() || 'cairo'

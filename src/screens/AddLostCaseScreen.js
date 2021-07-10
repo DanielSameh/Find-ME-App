@@ -75,6 +75,7 @@ const AddLostCaseScreen = ({ navigation }) => {
 
     const imageConvert = useImageConvert(imageUris)
     info.images = await imageConvert.getImagesUri(imagesId)
+    info.imagesId = imagesId
     info.gender = checked
     info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
