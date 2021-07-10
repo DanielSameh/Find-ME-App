@@ -80,7 +80,7 @@ const AddLostCaseScreen = ({ navigation }) => {
     info.lostDate = date.toJSON()
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.age = Number(info.age)
-    info.city = locationStore[0].city.toLowerCase() || 'cairo'
+    info.city = locationStore?.[0]?.city?.toLowerCase() || 'cairo'
     console.log(info)
 
     if (netInfo.isConnected) {
@@ -144,7 +144,7 @@ const AddLostCaseScreen = ({ navigation }) => {
             <Input
               isDisable
               inputPlaceHolder={` ${
-                locationStore ? locationStore[0].region : 'Enter location here'
+                locationStore ? locationStore?.[0]?.region : 'Enter location here'
               }`}
             >
               <EvilIcons name='location' size={24} color='#9FA5C0' />
