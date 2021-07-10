@@ -44,11 +44,13 @@ const AddFoundCaseScreen = ({ navigation }) => {
     latitude: 0,
     longitude: 0,
   })
+  const [show, setShow] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const netInfo = useNetInfo()
   const [imageUris, setImageUris] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState(false)
+  const [info, setInfo] = useState(null)
   const [checked, setChecked] = React.useState('male')
   const uploadFoundCaseApi = useApi(foundCasesApi.uploadFoundCase)
   const {
@@ -75,13 +77,19 @@ const AddFoundCaseScreen = ({ navigation }) => {
     info.coordinates = [coordinate.latitude, coordinate.longitude]
     info.city = locationStore?.[0]?.city?.toLowerCase() || 'cairo'
 
+
     console.log(info)
 
     if (netInfo.isConnected) {
       console.log('upload 1')
       await uploadFoundCaseApi
         .request(info, imagesId)
-        .then(() => navigation.pop())
+        .then((res) => {
+          //  navigation.pop()
+          setShow(true)
+          console.log(res.data.hasMatch[0])
+          setInfo(res.data.hasMatch[0])
+        })
         .catch(e => {
           console.error('error1', e)
           setError(true)
@@ -99,6 +107,26 @@ const AddFoundCaseScreen = ({ navigation }) => {
 
   return (
     <View>
+      <Modal
+        visible={show}
+        transparent={true}
+        onRequestClose={() => {
+          setShow(!show)
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {info ? <View>
+              <Text style={styles.modalText}>there is matching with case number :{info._id} </Text>
+              <Text style={styles.modalText}>there is matching with user :{info.name} </Text>
+              <Text style={styles.modalText}>there is matching with user phone :{info.phone} </Text>
+            </View>
+              : <Text style={styles.modalText}>there is  no matching</Text>
+            }
+          </View>
+        </View>
+
+      </Modal>
       <ScrollView>
         <Container bc='white'>
           <VerticalSpace />
@@ -138,9 +166,8 @@ const AddFoundCaseScreen = ({ navigation }) => {
           >
             <Input
               isDisable
-              inputPlaceHolder={` ${
-                locationStore ? locationStore?.[0]?.region : 'Enter location here'
-              }`}
+              inputPlaceHolder={` ${locationStore ? locationStore?.[0]?.region : 'Enter location here'
+                }`}
             >
               <EvilIcons name='location' size={24} color='#9FA5C0' />
             </Input>
@@ -290,6 +317,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+
 })
 
 export default AddFoundCaseScreen
